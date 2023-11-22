@@ -5,7 +5,7 @@ import { Sequelize } from "sequelize";
 const sequelize = new Sequelize('fundforall', 'root', '', {
   host: 'localhost',
   dialect: 'mysql',
-  port:8080,
+  port:3306, // changed according to db port
 });
 
 
@@ -17,4 +17,4 @@ try {
     console.error('Unable to connect to the database:', error);
 }
 
-export default sequelize
+export default sequelize;

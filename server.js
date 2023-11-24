@@ -17,6 +17,7 @@ app.use(cors())
 
 // routers
 // app.use('/api/products', productRouter)
+app.use('/api/donationRoute', donationsRouter)
 
 
 // port

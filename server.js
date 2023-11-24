@@ -1,16 +1,18 @@
 import dotenv from 'dotenv'
-import  express  from 'express'
+import express  from 'express'
 import cors from 'cors'
+import sequelize from './Config/con.js'
+import campaignRouter from './Routes/campaignsRouter.js'
+
 dotenv.config()
-import userRouter from './Routes/usersRouter.js'
-import sequelize from './Config/connection.js'
-sequelize.sync();
+
 // initialize express app
 
 const app = express()
 
 // middleware
 
+app.use("/api/campaignRoute", campaignRouter)
 app.use(express.json())
 app.use(cors())
 

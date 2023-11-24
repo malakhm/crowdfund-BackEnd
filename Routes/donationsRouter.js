@@ -14,7 +14,7 @@ donationsRouter.post('/', DonorController.createDonation);
 donationsRouter.get('/:id', DonorController.getDonationById);
 
 // Route for getting donation amount by ID
-donationsRouter.get('/:id/amount', DonorController.getDonationAmountById);
+donationsRouter.get('/amount/:id', DonorController.getDonationAmountById);
 
 // Route for getting donations by donor ID
 donationsRouter.get('/donor/:requested_donor_id', DonorController.getDonationByDonorID);

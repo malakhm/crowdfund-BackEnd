@@ -70,7 +70,7 @@ static async getDonationById (req, res)  {
   }
 };
 
-// Get donation by  amount ID
+// Get donation amount by   ID
 static async getDonationAmountById  (req, res) {
   const { id } = req.params;
   try {

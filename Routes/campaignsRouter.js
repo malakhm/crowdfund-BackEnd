@@ -1,51 +1,30 @@
-import {
-  createCampaign,
-  getAllCampaigns,
-  createCampaign,
-  getAllCampaigns,
-  getAcceptedCampaigns,
-  getPendingCampaigns,
-  getHiddenCampaigns,
-  getVisibleCampaigns,
-  getCampaignByCampaignName,
-  acceptCampaign,
-  hideCampaign,
-  unhideCampaign,
-  changeCampaignName,
-  changeCampaignDescription,
-  changeCampaignTarget,
-  changeCampaignAmount,
-  changeCampaignStartDate,
-  changeCampaignEndDate,
-  deleteCampaignByCampaignName,
-  deletePendingCampaigns,
-} from "../Controllers/campaignsController";
+import CampaignController from "../Controllers/campaignsController.js";
 
 import express from "express";
 
 const campaignRouter = express.Router();
 
 //Create ------------------------------------------------------------------------------
-campaignRouter.post("/post", createCampaign);
+campaignRouter.post("/post", CampaignController.createCampaign);
 //Read --------------------------------------------------------------------------------
-campaignRouter.get("/getAll", getAllCampaigns);
-campaignRouter.get("/getAllAccepted", getAcceptedCampaigns);
-campaignRouter.get("/getAllPending", getPendingCampaigns);
-campaignRouter.get("/getAllHidden", getHiddenCampaigns);
-campaignRouter.get("/getAllVisible", getVisibleCampaigns);
-campaignRouter.get("/getByName/:name", getCampaignByCampaignName);
+campaignRouter.get("/getAll", CampaignController.getAllCampaigns);
+campaignRouter.get("/getAllAccepted", CampaignController.getAcceptedCampaigns);
+campaignRouter.get("/getAllPending", CampaignController.getPendingCampaigns);
+campaignRouter.get("/getAllHidden", CampaignController.getHiddenCampaigns);
+campaignRouter.get("/getAllVisible", CampaignController.getVisibleCampaigns);
+campaignRouter.get("/getByName/:name", CampaignController.getCampaignByCampaignName);
 //Update ------------------------------------------------------------------------------
-campaignRouter.put("/accept/:name", acceptCampaign);
-campaignRouter.put("/hide/:name", hideCampaign);
-campaignRouter.put("/unhide/:name", unhideCampaign);
-campaignRouter.put("/changeName/:name/:newName", changeCampaignName);
-campaignRouter.put("/changeDescription/:name/:description", changeCampaignDescription);
-campaignRouter.put("/changeTarget/:name/:target", changeCampaignTarget);
-campaignRouter.put("/changeAmount/:name/:amount", changeCampaignAmount);
-campaignRouter.put("/changeStartDate/:name/:startDate", changeCampaignStartDate);
-campaignRouter.put("/changeEndDate/:name/:endDate", changeCampaignEndDate);
+campaignRouter.put("/accept/:name", CampaignController.acceptCampaign);
+campaignRouter.put("/hide/:name", CampaignController.hideCampaign);
+campaignRouter.put("/unhide/:name", CampaignController.unhideCampaign);
+campaignRouter.put("/changeName/:name/:newName", CampaignController.changeCampaignName);
+campaignRouter.put("/changeDescription/:name/:description", CampaignController.changeCampaignDescription);
+campaignRouter.put("/changeTarget/:name/:target", CampaignController.changeCampaignTarget);
+campaignRouter.put("/changeAmount/:name/:amount", CampaignController.changeCampaignAmount);
+campaignRouter.put("/changeStartDate/:name/:startDate", CampaignController.changeCampaignStartDate);
+campaignRouter.put("/changeEndDate/:name/:endDate", CampaignController.changeCampaignEndDate);
 //Delete ------------------------------------------------------------------------------
-campaignRouter.delete("/deleteByName/:name", deleteCampaignByCampaignName);
-campaignRouter.delete("/deleteAllPending", deletePendingCampaigns);
+campaignRouter.delete("/deleteByName/:name", CampaignController.deleteCampaignByCampaignName);
+campaignRouter.delete("/deleteAllPending", CampaignController.deletePendingCampaigns);
 
 export default campaignRouter;

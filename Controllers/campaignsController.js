@@ -1,7 +1,7 @@
-import Campaign from "../Models/campaignsModel";
-
-//Post a Campaign ----------------------------------------------------------------------------------------------------
-const createCampaign = async (req, res) => {
+import Campaign from "../Models/campaignsModel.js";
+class CampaignController{
+  //Post a Campaign ----------------------------------------------------------------------------------------------------
+static async createCampaign (req, res) {
   try { 
     const new_campaign = await Campaign.create(req.body);
     return res.status(201) //created
@@ -23,10 +23,10 @@ const createCampaign = async (req, res) => {
 }
 
 //Get all campaigns ----------------------------------------------------------------------------------------------------
-const getAllCampaigns = async (req, res) => {
+ static async getAllCampaigns (req, res) {
   try {
     const all_campaigns = await Campaign.findAll();
-    if (all_campaigns && all_campaigns != []) { //added an empty array condition since it is considered true by js
+    if (all_campaigns && all_campaigns.length > 0) { //added an empty array condition since it is considered true by js
       return res.status(200) //ok
       .json({
         data: all_campaigns,
@@ -55,14 +55,14 @@ const getAllCampaigns = async (req, res) => {
 }
 
 //Get accepted campaigns ----------------------------------------------------------------------------------------------------
-const getAcceptedCampaigns = async (req, res) => {
+ static async getAcceptedCampaigns (req, res) {
   try {
     const accepted_campaigns = await Campaign.findAll({
       where: {
         isAccepted: true,
       }
     })
-    if (accepted_campaigns && accepted_campaigns != []) { //added an empty array condition to only accept relevant data
+    if (accepted_campaigns && accepted_campaigns.length > 0) { //added an empty array condition to only accept relevant data
       return res.status(200)
       .json({
         data: accepted_campaigns,
@@ -91,14 +91,14 @@ const getAcceptedCampaigns = async (req, res) => {
 }
 
 //Get pending campaigns ----------------------------------------------------------------------------------------------------
-const getPendingCampaigns = async (req, res) => {
+ static async getPendingCampaigns (req, res) {
   try {
     const pending_campaigns = await Campaign.findAll({
       where: {
         isAccepted: false,
       }
     })
-    if (pending_campaigns && pending_campaigns != []) { //since [] is read as true, we added the != [] condition
+    if (pending_campaigns && pending_campaigns.length > 0) { //since [] is read as true, we added the.length > 0 condition
       return res.status(200)
       .json({
         data: pending_campaigns,
@@ -127,14 +127,14 @@ const getPendingCampaigns = async (req, res) => {
 }
 
 //Get hidden campaigns ----------------------------------------------------------------------------------------------------
-const getHiddenCampaigns = async (req, res) => {
+ static async getHiddenCampaigns (req, res) {
   try {
     const hidden_campaigns = await Campaign.findAll({
       where: {
         isHidden: true,
       }
     })
-    if (hidden_campaigns && hidden_campaigns != []) { //since [] is read as true, we added the != [] condition
+    if (hidden_campaigns && hidden_campaigns.length > 0) { //since [] is read as true, we added the.length > 0 condition
       return res.status(200)
       .json({
         data: hidden_campaigns,
@@ -163,14 +163,14 @@ const getHiddenCampaigns = async (req, res) => {
 }
 
 //Get visible campaigns ----------------------------------------------------------------------------------------------------
-const getVisibleCampaigns = async (req, res) => {
+ static async getVisibleCampaigns (req, res) {
   try {
     const visible_campaigns = await Campaign.findAll({
       where: {
         isHidden: false,
       }
     })
-    if (visible_campaigns && visible_campaigns != []) { //since [] is read as true, we added the != [] condition
+    if (visible_campaigns && visible_campaigns.length > 0) { //since [] is read as true, we added the.length > 0 condition
       return res.status(200)
       .json({
         data: visible_campaigns,
@@ -199,7 +199,7 @@ const getVisibleCampaigns = async (req, res) => {
 }
 
 //Get campaign by campaignName ----------------------------------------------------------------------------------------------------
-const getCampaignByCampaignName = async (req, res) => {
+ static async getCampaignByCampaignName (req, res) {
   try {
     const requested_campaign_name = req.params.name; //put :name in url as parameter
     const requested_campaign = await Campaign.findOne({
@@ -207,7 +207,7 @@ const getCampaignByCampaignName = async (req, res) => {
         campaign_name: requested_campaign_name,
       }
     });
-    if (requested_campaign && requested_campaign != []) { //added != [], since empty array is a truthy value
+    if (requested_campaign && requested_campaign.length > 0) { //added.length > 0, since empty array is a truthy value
       return res.status(200)
       .json({
         data: requested_campaign,
@@ -236,7 +236,7 @@ const getCampaignByCampaignName = async (req, res) => {
 }
 
 //Accept(update isAccepted) a campaign by name ----------------------------------------------------------------------------------------------------
-const acceptCampaign = async (req, res) => {
+ static async acceptCampaign (req, res) {
   try {
     const campaign_name_to_accept = req.params.name;
     const [accepted_campaign_rows] = await Campaign.update({ //put accepted campaign in array since update() returns an array with updated row numbers
@@ -264,7 +264,7 @@ const acceptCampaign = async (req, res) => {
 }
 
 //Hide(update isHidden) a campaign by name ----------------------------------------------------------------------------------------------------
-const hideCampaign = async (req, res) => {
+ static async hideCampaign (req, res) {
   try {
     const campaign_name_to_hide = req.params.name; //put :name in url
     const [number_of_campaign_changed_rows_hide] = await Campaign.update({ //put number of campaign changed rows in array since update() returns an array with updated row numbers
@@ -292,7 +292,7 @@ const hideCampaign = async (req, res) => {
 }
 
 //Unhide(update isHidden) a campaign by name ----------------------------------------------------------------------------------------------------
-const unhideCampaign = async (req, res) => {
+ static async unhideCampaign (req, res) {
   try {
     const campaign_name_to_hide = req.params.name; //put :name in url
     const [number_of_campaign_changed_rows_unhide] = await Campaign.update({ //put number of campaign rows in array since update() returns an array with updated row numbers
@@ -320,7 +320,7 @@ const unhideCampaign = async (req, res) => {
 }
 
 //change campaign name ----------------------------------------------------------------------------------------------------
-const changeCampaignName = async (req, res) => {
+ static async changeCampaignName (req, res) {
   try {
     const campaign_name_to_change = req.params.name; //put :name in url
     const new_campaign_name = req.params.newName; //put :newName in url
@@ -355,7 +355,7 @@ const changeCampaignName = async (req, res) => {
 }
 
 //change description ----------------------------------------------------------------------------------------------------
-const changeCampaignDescription = async (req, res) => {
+ static async changeCampaignDescription (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_description = req.params.description; //put :description in url
@@ -390,7 +390,7 @@ const changeCampaignDescription = async (req, res) => {
 }
 
 //change target ----------------------------------------------------------------------------------------------------
-const changeCampaignTarget = async (req, res) => {
+ static async changeCampaignTarget (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_target = req.params.target; //put :target in url
@@ -425,7 +425,7 @@ const changeCampaignTarget = async (req, res) => {
 }
 
 //change amount ----------------------------------------------------------------------------------------------------
-const changeCampaignAmount = async (req, res) => {
+ static async changeCampaignAmount (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_amount = req.params.amount; //put :amount in url
@@ -460,7 +460,7 @@ const changeCampaignAmount = async (req, res) => {
 }
 
 //change start date ----------------------------------------------------------------------------------------------------
-const changeCampaignStartDate = async (req, res) => {
+ static async changeCampaignStartDate (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_start_date = req.params.startDate; //put :startDate in url using YYYY-MM-DD format and try it
@@ -495,7 +495,7 @@ const changeCampaignStartDate = async (req, res) => {
 }
 
 //change end date ----------------------------------------------------------------------------------------------------
-const changeCampaignEndDate = async (req, res) => {
+ static async changeCampaignEndDate (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_end_date = req.params.endDate; //put :endDate in url using YYYY-MM-DD format and try it
@@ -530,7 +530,7 @@ const changeCampaignEndDate = async (req, res) => {
 }
 
 //Delete a campaign by name ----------------------------------------------------------------------------------------------------
-const deleteCampaignByCampaignName = async (req, res) => {
+ static async deleteCampaignByCampaignName (req, res) {
   try {
     const campaign_name_to_delete = req.params.name; // put :name as parameter in the url
     const deleted_campaign_rows = await Campaign.destroy({
@@ -555,7 +555,7 @@ const deleteCampaignByCampaignName = async (req, res) => {
 }
 
 //Delete pending campaigns ----------------------------------------------------------------------------------------------------
-const deletePendingCampaigns = async (req, res) => {
+ static async deletePendingCampaigns (req, res) {
   try {
     const deleted_campaign_rows = await Campaign.destroy({
       where: {
@@ -579,25 +579,9 @@ const deletePendingCampaigns = async (req, res) => {
   }
 }
 
+}
+
+
 //export controllers ----------------------------------------------------------------------------------------------------
 
-exports = {
-  createCampaign,
-  getAllCampaigns,
-  getAcceptedCampaigns,
-  getPendingCampaigns,
-  getHiddenCampaigns,
-  getVisibleCampaigns,
-  getCampaignByCampaignName,
-  acceptCampaign,
-  hideCampaign,
-  unhideCampaign,
-  changeCampaignName,
-  changeCampaignDescription,
-  changeCampaignTarget,
-  changeCampaignAmount,
-  changeCampaignStartDate,
-  changeCampaignEndDate,
-  deleteCampaignByCampaignName,
-  deletePendingCampaigns,
-}
+export default CampaignController

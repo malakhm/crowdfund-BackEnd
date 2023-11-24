@@ -138,7 +138,7 @@ class UsersController {
                 }
 
             );
-            res.status(200).json({ message: `dvdwv${updateUsers}` });
+            res.status(200).json({ message: `user updated successfullyyyyy!!!` });
 
         }
 
@@ -198,11 +198,20 @@ class UsersController {
     // get all accepted Donors
     static async getDonors(req, res) {
 
-
         try {
-            const getUser = await Users.findAll({ where: { isDonor: true } });
+            const donorUsers = await Users.findAll({
+                where: {
+                    isDonor: 1,
+                    confirmedByAdmin:1
+                },
+            });
 
-            res.status(200).json(getUser);
+            if (donorUsers.length === 0) {
+                return res.status(404).json({ error: 'No donor was found!' });
+            }
+    
+            // Send the list of donor users as a response
+            return res.status(200).json(donorUsers);
 
         }
         catch (err) {
@@ -215,17 +224,49 @@ class UsersController {
 
         }
     }
+
+
 
     // getCreators
     static async getCreators(req, res) {
 
         try {
-            const getUser = await Users.findOne({
+            const creatorUsers = await Users.findAll({
                 where: {
-                    [Op.and]: [
-                        { isCreator: true },
-                        { confirmedByAdmin: true }
-                    ]
+                    isCreator: 1,
+                    confirmedByAdmin:1
+                },
+            });
+
+            if (creatorUsers.length === 0) {
+                return res.status(404).json({ error: 'No creator was found!' });
+            }
+    
+            // Send the list of donor users as a response
+            return res.status(200).json(creatorUsers);
+
+        }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+
+        }
+    }
+    // getPending
+
+    static async getPending(req, res) {
+       
+
+        try {
+            const getUser = await Users.findAll({
+                where: {
+                    
+                         confirmedByAdmin: 0 
+                    
                 }
             });
             res.status(200).json(getUser);
@@ -242,21 +283,18 @@ class UsersController {
         }
     }
 
-    // getPending
-
-    static async getPending(req, res) {
+    // Accept a user
+    static async acceptUser(req, res) {
+        const { id } = req.params;
 
         try {
-            const getUser = await Users.findOne({
-                where: {
-                    [Op.and]: [
-                        { isCreator: true },
-                        { isDonor: true },
-                        { confirmedByAdmin: true }
-                    ]
-                }
-            });
-            res.status(200).json(getUser);
+            const acceptUser = await Users.update({
+                confirmedByAdmin: 1
+            },
+                {
+                    where: { id: id }
+                });
+            res.status(200).json(acceptUser);
 
         }
         catch (err) {

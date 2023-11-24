@@ -1,12 +1,7 @@
 import dotenv from 'dotenv'
 import express  from 'express'
 import cors from 'cors'
-import sequelize from './Config/con'
-import campaignRouter from './Routes/campaignsRouter'
-
 dotenv.config()
-
-sequelize.sync({alter: true}) //Be carefull when editing a model, it might add a new one while keeping the old table
 
 // initialize express app
 
@@ -32,3 +27,5 @@ app.listen(PORT, ()=>{
     console.log(`server is running on port: ${PORT}`)
 })
 
+
+app.use('/api/users',userRouter)

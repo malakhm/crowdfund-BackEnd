@@ -20,6 +20,6 @@ Campaign.hasMany(Donation);
 Donation.belongsTo(Campaign) 
 
 
-Donation.sync({force:true});
+Donation.sync();
 
 export default Donation;

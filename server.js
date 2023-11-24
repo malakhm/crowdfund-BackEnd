@@ -22,7 +22,7 @@ app.use(cors())
 
 
 // routers
-// app.use('/api/products', productRouter)
+app.use('/api/users',userRouter)
 app.use('/api/donationRoute', donationsRouter)
 
 
@@ -36,4 +36,3 @@ app.listen(PORT, ()=>{
 })
 
 
-app.use('/api/users',userRouter)

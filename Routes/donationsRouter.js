@@ -28,11 +28,7 @@ donationsRouter.get('/donor/:requested_donor_id/campaign/:requested_campaign_id'
 // Route for updating a donation by ID
 donationsRouter.put('/:id', DonorController.updateDonation);
 
-// Route for deleting a donation by ID
-donationsRouter.delete('/:id', DonorController.deleteDonationById);
-
-// Route for deleting all donations
-donationsRouter.delete('/', DonorController.deleteAllDonations);
+donationsRouter.get('/donation/sum/:id', DonorController.getSum)
 
 // Export the router
 export default donationsRouter;

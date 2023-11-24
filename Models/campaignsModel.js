@@ -15,9 +15,7 @@ const Campaign = sequelize.define("Campaign", {
 //---------------------------------------------------------------------------------------------------------------------------------3
   target: {type: DataTypes.INTEGER, allowNull: false}, //better for calculations
 //---------------------------------------------------------------------------------------------------------------------------------4
-  creator_id: {type: DataTypes.INTEGER, allowNull: false, references: {
-    model: User, key: "id" //connected the campaign to its unique creator through thr User's primary key
-  }},
+
 //---------------------------------------------------------------------------------------------------------------------------------5
   amount: {type: DataTypes.INTEGER, allowNull: false},
 //---------------------------------------------------------------------------------------------------------------------------------6
@@ -29,9 +27,12 @@ const Campaign = sequelize.define("Campaign", {
 //---------------------------------------------------------------------------------------------------------------------------------9
   end_date: {type: DataTypes.DATEONLY, allowNull: false},
 }
+
+
 )
 //relations -----------------------------------------------------------------------------------------------------------------------
-User.hasMany(Campaign, {foreignKey: "creator_id"}); //one user-to-many campaigns
-Campaign.belongsTo(User, {foreignKey: "creator_id"}); //one campaign-to-one user through creatorId
-
+User.hasMany(Campaign); //one user-to-many campaigns
+Campaign.belongsTo(User); //one campaign-to-one user through creatorId
+ //one donation-to-one user through
+Campaign.sync()
 export default Campaign;

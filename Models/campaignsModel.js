@@ -1,6 +1,6 @@
-import {sequelize} from "../Config/con";
+import sequelize from "../Config/con.js";
 import {DataTypes} from "sequelize";
-import {User} from "./usersModel"; // imported user for the relation
+import User from "./usersModel.js"; // imported user for the relation
 
 const Campaign = sequelize.define("Campaign", {
   campaign_name: {type: DataTypes.STRING, allowNull: false, validate: { //try validate, if found benificial do it for all attributes

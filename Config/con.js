@@ -5,7 +5,7 @@ import { Sequelize } from "sequelize";
 const sequelize = new Sequelize('fundforall', 'root', '', {
   host: 'localhost',
   dialect: 'mysql',
-  port:8080,
+  port:3307
 });
 
 

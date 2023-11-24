@@ -1,6 +1,6 @@
 
 import express from 'express';
-import DonorController from './DonorController'; 
+import DonorController from '../Controllers/donationsController.js'; 
 
 const donationsRouter = express.Router();
 

@@ -70,5 +70,5 @@ const User = sequelize.define("users", {
 })
 
 
-
+User.sync()
 export default User

@@ -1,8 +1,10 @@
 import dotenv from 'dotenv'
 import express  from 'express'
 import cors from 'cors'
-import sequelize from './Config/con.js'
+import sequelize from './Config/connection.js'
 import campaignRouter from './Routes/campaignsRouter.js'
+import donationsRouter from './Routes/donationsRouter.js'
+import userRouter from './Routes/usersRouter.js'
 
 dotenv.config()
 

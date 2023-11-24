@@ -1,4 +1,4 @@
-import Donation from '../Models/donationsModel';
+import Donation from '../Models/donationsModel.js';
 
 class DonorController{
   // Get all donations
@@ -284,5 +284,5 @@ static async deleteAllDonations (req, res)  {
 
 }
 
-export default {DonorController}
+export default DonorController
   

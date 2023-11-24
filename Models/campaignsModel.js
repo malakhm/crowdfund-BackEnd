@@ -1,4 +1,4 @@
-import sequelize from "../Config/con.js";
+import sequelize from "../Config/connection.js";
 import {DataTypes} from "sequelize";
 import User from "./usersModel.js"; // imported user for the relation
 

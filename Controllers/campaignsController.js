@@ -1,14 +1,22 @@
 import Campaign from "../Models/campaignsModel.js";
+import {runCloudinaryUploader} from "../Config/cloudinary.js";
+import path from "path";
 
 class CampaignController{
   //Post a Campaign ----------------------------------------------------------------------------------------------------
 static async createCampaign (req, res) {
-  // console.log("this is the body: ",req.body)
+  console.log("this is the body: ",req.body)
+  console.log("this is the file: ",req.file)
+  console.log("this is the file path: ",req.file.path)
   try { 
-    const new_campaign = await Campaign.create(req.body);
+    let new_campaign = new Campaign(req.body); //an instance of campaign gotten from body to manipulate it
+    if (req.file) {
+      new_campaign.campaign_image = runCloudinaryUploader(req.file.path) //run cloudinary uploader function returns the cloudinary image url, save it to campaign image
+    }
+    const saved_new_campaign = await new_campaign.save(); //saving the manipulated instance to the db
     return res.status(201) //created
     .json({
-      data: new_campaign.toJSON(), //used tojson() to show the data and not the instance details
+      data: saved_new_campaign.toJSON(), //used tojson() to show the data and not the instance details
       status: 201,
       success: true,
       message: "Campaign added"
@@ -209,7 +217,7 @@ static async createCampaign (req, res) {
         campaign_name: requested_campaign_name,
       }
     });
-    console.log("this is requested campaign: ",requested_campaign);
+    // console.log("this is requested campaign: ",requested_campaign);
     if (requested_campaign && requested_campaign.length > 0) { //added.length > 0, since empty array is a truthy value
       return res.status(200)
       .json({

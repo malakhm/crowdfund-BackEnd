@@ -1,15 +1,18 @@
-import sequelize from "../Config/con.js"
+import sequelize from "../Config/connection.js"
 import { DataTypes } from "sequelize"
+
 import bcrypt from 'bcrypt'
-const User = sequelize.define("user", {
+const User = sequelize.define("users", {
+
     username: {
         type: DataTypes.STRING,
         allowNull: false,
+        
+        unique: true
     },
     password :{
         type: DataTypes.STRING,
         allowNull: false,
-
     },
     first_name: {
         type: DataTypes.STRING,
@@ -37,35 +40,28 @@ const User = sequelize.define("user", {
     },
     isDonor: {
         type: DataTypes.BOOLEAN,
-        default: false,
-        allowNull: false,
+        defaultValue: false,
+       
+       
 
     },
     isCreator: {
         type: DataTypes.BOOLEAN,
-        default: false,
-        allowNull: false,
+        defaultValue: false,
+   
 
     },
     confirmedByAdmin: {
         type: DataTypes.BOOLEAN,
-        default: false,
-        allowNull: false,
+        defaultValue: false,
+       
 
     },
    
 
-}, {
-    hooks: {
-     beforeCreate: async (user) => {
-      if (user.password) {
-       const salt = await bcrypt.genSaltSync(10, 'a');
-       user.password = bcrypt.hashSync(user.password, salt);
-      }
-    }
-},
+
 })
 
-User.sync()
 
+User.sync()
 export default User

@@ -25,9 +25,9 @@ static async getAllDonations (req, res) {
 static async createDonation (req, res)  {
   try {
     const newDonation = await Donation.create(req.body);
-    return res.status(201).json({
+    return res.status(200).json({
       data: newDonation,
-      status: 201,
+      status: 200,
       success: true,
       message: 'Donation created successfully',
     });

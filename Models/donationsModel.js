@@ -6,14 +6,14 @@ import Campaign from "../Models/campaignsModel.js";
 const Donation= sequelize.define("Donation", {
   
 
-//---------------------------------------------------------------------------------------------------------------------------------5
+//---------------------------------------------------------------------------------------------------------------------------------1
   amount: {type: DataTypes.INTEGER, allowNull: false},
-//---------------------------------------------------------------------------------------------------------------------------------9
-  date_of_donation: {type: DataTypes.DATE, allowNull: false},
+//---------------------------------------------------------------------------------------------------------------------------------2
+  date_of_donation: {type: DataTypes.DATEONLY, allowNull: false}, //use YYYY-MM-DD for input
 }
 )
 
-  User.hasMany(Donation); 
+User.hasMany(Donation); 
 Donation.belongsTo(User); 
  //one user-to-many campaigns
 Campaign.hasMany(Donation);

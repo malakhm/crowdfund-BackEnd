@@ -17,9 +17,6 @@ const User = sequelize.define("users", {
             const hash = bcrypt.hashSync(value, 10);
             this.setDataValue('password', hash);
         },
-
-
-
     },
     first_name: {
         type: DataTypes.STRING,
@@ -38,7 +35,7 @@ const User = sequelize.define("users", {
         allowNull: false,
     },
     dob: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY, //use YYYY-MM-DD for input
         allowNull: false,
     },
     gender: {
@@ -48,27 +45,16 @@ const User = sequelize.define("users", {
     isDonor: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-       
-       
-
     },
     isCreator: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-   
-
     },
     confirmedByAdmin: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-       
-
     },
-   
-
-
 })
-
 
 User.sync()
 export default User

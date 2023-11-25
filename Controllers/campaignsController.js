@@ -1,7 +1,9 @@
 import Campaign from "../Models/campaignsModel.js";
+
 class CampaignController{
   //Post a Campaign ----------------------------------------------------------------------------------------------------
 static async createCampaign (req, res) {
+  // console.log("this is the body: ",req.body)
   try { 
     const new_campaign = await Campaign.create(req.body);
     return res.status(201) //created
@@ -202,11 +204,12 @@ static async createCampaign (req, res) {
  static async getCampaignByCampaignName (req, res) {
   try {
     const requested_campaign_name = req.params.name; //put :name in url as parameter
-    const requested_campaign = await Campaign.findOne({
+    const requested_campaign = await Campaign.findAll({ //was findone, but its not working, try it again later
       where: {
         campaign_name: requested_campaign_name,
       }
     });
+    console.log("this is requested campaign: ",requested_campaign);
     if (requested_campaign && requested_campaign.length > 0) { //added.length > 0, since empty array is a truthy value
       return res.status(200)
       .json({
@@ -324,21 +327,20 @@ static async createCampaign (req, res) {
   try {
     const campaign_name_to_change = req.params.name; //put :name in url
     const new_campaign_name = req.params.newName; //put :newName in url
-    const [number_of_campaign_changed_rows_name,[edited_campaign_name]] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers, and an array of updated value as second item
+    const [number_of_campaign_changed_rows_name] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
       campaign_name: new_campaign_name,
     },{
       where: {
         campaign_name: campaign_name_to_change,
       },
-      returning: true, //to return the updated value
     });
     if (number_of_campaign_changed_rows_name > 0) {
       res.status(200) //ok
       .json({
-        data: edited_campaign_name.toJSON(), //convert to json to see object
+        data: null,
         status: 200,
         success: true,
-        message: `changed the campaign name successfully to: ${edited_campaign_name.toJSON().campaign_name}`, //check if this works
+        message: `changed the campaign name successfully from ${campaign_name_to_change} to: ${new_campaign_name}`,
       });
     } else {
       res.sendStatus(404)
@@ -359,21 +361,20 @@ static async createCampaign (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_description = req.params.description; //put :description in url
-    const [number_of_campaign_changed_rows_description,[edited_campaign_description]] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers, and an array of updated value as second item
+    const [number_of_campaign_changed_rows_description] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
       description: new_description,
     },{
       where: {
         campaign_name: input_campaign_name,
       },
-      returning: true, //to return the updated value
     });
     if (number_of_campaign_changed_rows_description > 0) {
       res.status(200) //ok
       .json({
-        data: edited_campaign_description.toJSON(), //convert to json to see object
+        data:null,
         status: 200,
         success: true,
-        message: `changed the campaign description successfully to: ${edited_campaign_description.toJSON().description}`, //check if this works
+        message: `changed the campaign description successfully to: ${new_description}`,
       });
     } else {
       res.sendStatus(404)
@@ -394,21 +395,20 @@ static async createCampaign (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_target = req.params.target; //put :target in url
-    const [number_of_campaign_changed_rows_target,[edited_campaign_target]] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers, and an array of updated value as second item
+    const [number_of_campaign_changed_rows_target] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
       target: new_target,
     },{
       where: {
         campaign_name: input_campaign_name,
       },
-      returning: true, //to return the updated value
     });
     if (number_of_campaign_changed_rows_target > 0) {
       res.status(200) //ok
       .json({
-        data: edited_campaign_target.toJSON(), //convert to json to see object
+        data: null,
         status: 200,
         success: true,
-        message: `changed the campaign target successfully to: ${edited_campaign_target.toJSON().target}`, //check if this works
+        message: `changed the campaign target successfully to: ${new_target}`,
       });
     } else {
       res.sendStatus(404)
@@ -429,21 +429,20 @@ static async createCampaign (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_amount = req.params.amount; //put :amount in url
-    const [number_of_campaign_changed_rows_amount,[edited_campaign_amount]] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers, and an array of updated value as second item
+    const [number_of_campaign_changed_rows_amount] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
       amount: new_amount,
     },{
       where: {
         campaign_name: input_campaign_name,
       },
-      returning: true, //to return the updated value
     });
     if (number_of_campaign_changed_rows_amount > 0) {
       res.status(200) //ok
       .json({
-        data: edited_campaign_amount.toJSON(), //convert to json to see object
+        data: null,
         status: 200,
         success: true,
-        message: `changed the campaign amount successfully to: ${edited_campaign_amount.toJSON().amount}`, //check if this works
+        message: `changed the campaign amount successfully to: ${new_amount}`,
       });
     } else {
       res.sendStatus(404)
@@ -464,21 +463,20 @@ static async createCampaign (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_start_date = req.params.startDate; //put :startDate in url using YYYY-MM-DD format and try it
-    const [number_of_campaign_changed_rows_start_date,[edited_campaign_start_date]] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers, and an array of updated value as second item
+    const [number_of_campaign_changed_rows_start_date] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
       start_date: new_start_date,
     },{
       where: {
         campaign_name: input_campaign_name,
       },
-      returning: true, //to return the updated value
     });
     if (number_of_campaign_changed_rows_start_date > 0) {
       res.status(200) //ok
       .json({
-        data: edited_campaign_start_date.toJSON(), //convert to json to see object
+        data: null,
         status: 200,
         success: true,
-        message: `changed the campaign start date successfully to: ${edited_campaign_start_date.toJSON().start_date}`, //check if this works
+        message: `changed the campaign start date successfully to: ${new_start_date}`,
       });
     } else {
       res.sendStatus(404)
@@ -499,21 +497,20 @@ static async createCampaign (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
     const new_end_date = req.params.endDate; //put :endDate in url using YYYY-MM-DD format and try it
-    const [number_of_campaign_changed_rows_end_date,[edited_campaign_end_date]] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers, and an array of updated value as second item
+    const [number_of_campaign_changed_rows_end_date] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
       end_date: new_end_date,
     },{
       where: {
         campaign_name: input_campaign_name,
       },
-      returning: true, //to return the updated value
     });
     if (number_of_campaign_changed_rows_end_date > 0) {
       res.status(200) //ok
       .json({
-        data: edited_campaign_end_date.toJSON(), //convert to json to see object
+        data: null, //convert to json to see object
         status: 200,
         success: true,
-        message: `changed the campaign end date successfully to: ${edited_campaign_end_date.toJSON().end_date}`, //check if this works
+        message: `changed the campaign end date successfully to: ${new_end_date}`,
       });
     } else {
       res.sendStatus(404)
@@ -578,10 +575,7 @@ static async createCampaign (req, res) {
     });
   }
 }
-
-}
-
+};
 
 //export controllers ----------------------------------------------------------------------------------------------------
-
 export default CampaignController

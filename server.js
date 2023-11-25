@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import express  from 'express'
+import express, { urlencoded }  from 'express'
 import cors from 'cors'
 import sequelize from './Config/connection.js'
 import campaignRouter from './Routes/campaignsRouter.js'
@@ -17,7 +17,8 @@ const app = express()
 // middleware
 
 app.use("/api/campaignRoute", campaignRouter)
-app.use(express.json())
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors())
 
 

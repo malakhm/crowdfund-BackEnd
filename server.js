@@ -6,7 +6,7 @@ import campaignRouter from './Routes/campaignsRouter.js'
 import donationsRouter from './Routes/donationsRouter.js'
 
 import userRouter from './Routes/usersRouter.js'
-
+import adminRouter from './Routes/adminRouter.js'
 
 dotenv.config()
  
@@ -19,6 +19,7 @@ const app = express()
 app.use("/api/campaignRoute", campaignRouter)
 app.use(express.json())
 app.use(cors())
+app.use("/admin" , adminRouter)
 
 
 // routers

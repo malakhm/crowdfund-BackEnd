@@ -1,59 +1,77 @@
 import Users from '../Models/usersModel.js'
 import sequelize from '../Config/connection.js';
 import { Op } from "sequelize"
+import bcrypt from 'bcrypt'
 class UsersController {
-        // get all users
-        static async getAllUsers (req, res) 
-        {
-            try
-            {
-                const getAll = await Users.findAll();
-                res.status(200).json(
-                    {
-                        data: getAll,
-                        status: 200,
-                        success: true,
-                        message: 'All users found!'
-                    }
-                );
-            }
-            catch (err)
-            {
-                res.status(500).json({
-                    data: null,
-                    status: 500,
-                    success: false,
-                    message: err.message });
-            }
+    // get all users
+    static async getAllUsers(req, res) {
+        try {
+            const getAll = await Users.findAll();
+            res.status(200).json(
+                {
+                    data: getAll,
+                    status: 200,
+                    success: true,
+                    message: 'All users found!'
+                }
+            );
         }
-    
-    
-        // get one user
-        static async getOneUser (req, res)
-        {
-            const { id } = req.params;
-            try
-            {
-                const getUser = await Users.findOne({where: {id:id}});
-                res.status(200).json(getUser);
-            }
-            catch (err)
-            {
-                res.status(500).json({
-                    data: null,
-                    status: 500,
-                    success: false,
-                    message: err.message });
-            
-            }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
         }
-        
-    
-        // create a new user
-        static async createUser(req, res) 
-        {   
-            const { username,
-                    password,
+    }
+
+
+    // get one user
+    static async getOneUser(req, res) {
+        const { id } = req.params;
+        try {
+            const getUser = await Users.findOne({ where: { id: id } });
+            res.status(200).json(getUser);
+        }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+
+        }
+    }
+
+
+    // create a new user
+    static async createUser(req, res) {
+        const { username,
+            password,
+            first_name,
+            last_name,
+            email,
+            dob,
+            gender,
+            phone_number,
+            isDonor,
+            isCreator,
+            confirmedByAdmin } = req.body;
+        try {
+            if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/.test(password))) {
+                res.status(403).json({ message: 'Invalid password' })
+                return
+
+            }
+            else {
+            }
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const createUser = await Users.create(
+                {
+                    username,
+                    password: hashedPassword,
                     first_name,
                     last_name,
                     email,
@@ -62,41 +80,32 @@ class UsersController {
                     phone_number,
                     isDonor,
                     isCreator,
-                    confirmedByAdmin} = req.body;
-            try
-            {
-                const createUser = await Users.create(
-                    {   username,
-                        password,
-                        first_name,
-                        last_name,
-                        email,
-                        dob,
-                        gender,
-                        phone_number,
-                        isDonor,
-                        isCreator,
-                        confirmedByAdmin}
-                );
-                res.status(200).json(createUser);
-            }
-            catch (err)
-            {
-                res.status(500).json({
-                    data: null,
-                    status: 500,
-                    success: false,
-                    message: err.message });
-            }
+                    confirmedByAdmin
+                }
+            );
+            // Hash the password
+        
+
+            res.status(200).json(createUser);
+
+
         }
-    
-    
-        // update/edit a user
-    
-        static async editUser   (req, res)
-        {
-            const { id } = req.params;
-            const 
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+        }
+    }
+
+
+    // update/edit a user
+
+    static async editUser(req, res) {
+        const { id } = req.params;
+        const
             { username,
                 password,
                 first_name,
@@ -107,171 +116,204 @@ class UsersController {
                 phone_number,
                 isDonor,
                 isCreator,
-                confirmedByAdmin} = req.body;
-            try
-            {
-                
-                const updateUsers = await Users.update(
-                    { username,
-                        password,
-                        first_name,
-                        last_name,
-                        email,
-                        dob,
-                        gender,
-                        phone_number,
-                        isDonor,
-                        isCreator,
-                        confirmedByAdmin},
-                    {
-                        where: {id: id}
-                    }
+                confirmedByAdmin } = req.body;
+        try {
+
+            const updateUsers = await Users.update(
+                {
+                    username,
+                    password,
+                    first_name,
+                    last_name,
+                    email,
+                    dob,
+                    gender,
+                    phone_number,
+                    isDonor,
+                    isCreator,
+                    confirmedByAdmin
+                },
+                {
+                    where: { id: id }
+                }
+
+            );
+            res.status(200).json({ message: `user updated successfullyyyyy!!!` });
+
+        }
+
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+        }
+
+    }
+
+    // delete a user
+
+    static async deleteUser(req, res) {
+        const { id } = req.params;
+        try {
+            const deleted = await Users.destroy({ where: { id: id } });
+            res.status(200).json(deleted);
+
+        }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+        }
+
+
+
+    }
+
+    // get users by username
+
+    static async getByUsername(req, res) {
+        const { username } = req.params;
+        try {
+            const getUser = await Users.findOne({ where: { username: username } });
+            res.status(200).json(getUser);
+
+        }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+
+        }
+    }
+
+    // get all accepted Donors
+    static async getDonors(req, res) {
+
+        try {
+            const donorUsers = await Users.findAll({
+                where: {
+                    isDonor: 1,
+                    confirmedByAdmin:1
+                },
+            });
+
+            if (donorUsers.length === 0) {
+                return res.status(404).json({ error: 'No donor was found!' });
+            }
+    
+            // Send the list of donor users as a response
+            return res.status(200).json(donorUsers);
+
+        }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+
+        }
+    }
+
+
+
+    // getCreators
+    static async getCreators(req, res) {
+
+        try {
+            const creatorUsers = await Users.findAll({
+                where: {
+                    isCreator: 1,
+                    confirmedByAdmin:1
+                },
+            });
+
+            if (creatorUsers.length === 0) {
+                return res.status(404).json({ error: 'No creator was found!' });
+            }
+    
+            // Send the list of donor users as a response
+            return res.status(200).json(creatorUsers);
+
+        }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+
+        }
+    }
+    // getPending
+
+    static async getPending(req, res) {
+       
+
+        try {
+            const getUser = await Users.findAll({
+                where: {
                     
-                    );
-                res.status(200).json({message: `dvdwv${updateUsers}`});
-    
-            }
-    
-            catch (err)
-            {
-                res.status(500).json({
-                    data: null,
-                    status: 500,
-                    success: false,
-                    message: err.message });
-            }
-    
-        }
-    
-        // delete a user
-    
-        static async deleteUser  (req, res) 
-        {
-            const { id } = req.params;
-            try
-            {
-                const deleted = await Users.destroy({where: {id: id}});
-                res.status(200).json(deleted);
-    
-            }
-            catch (err)
-            {
-                res.status(500).json({
-                    data: null,
-                    status: 500,
-                    success: false,
-                    message: err.message });
-            }
-            
-    
-    
-        }
-
-        // get users by username
-        
-        static async getByUsername (req, res)
-        {
-            const { username } = req.params;
-            try
-            {
-                const getUser = await Users.findOne({where: {username:username}});
-                res.status(200).json(getUser);
-              
-            }
-            catch (err)
-            {
-                res.status(500).json({
-                    data: null,
-                    status: 500,
-                    success: false,
-                    message: err.message });
-            
-            }
-        }
-
-        // get all accepted Donors
-        static async getDonors (req, res)
-        {
-           
-            
-            try
-            {
-                const getUser = await Users.findAll({where:{isDonor: true}});
+                         confirmedByAdmin: 0 
                     
-                res.status(200).json(getUser);
-              
-            }
-            catch (err)
-            {
-                res.status(500).json({
-                    data: null,
-                    status: 500,
-                    success: false,
-                    message: err.message });
-            
-            }
+                }
+            });
+            res.status(200).json(getUser);
+
         }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
 
-        // getCreators
-        static async getCreators (req, res)
-        {
-            
-            try
-            {
-                const getUser = await Users.findOne({where:{
-                    [Op.and]: [
-                      { isCreator: true },
-                      { confirmedByAdmin: true }
-                    ]
-                  }});
-                res.status(200).json(getUser);
-              
-            }
-            catch (err)
-            {
-                res.status(500).json({
-                    data: null,
-                    status: 500,
-                    success: false,
-                    message: err.message });
-            
-            }
         }
+    }
 
-        // getPending
-        
-        static async getPending (req, res)
-        {
-            
-            try
-            {
-                const getUser = await Users.findOne({where:{
-                    [Op.and]: [
-                      { isCreator: true },
-                      { isDonor: true},
-                      { confirmedByAdmin: true }
-                    ]
-                  }});
-                res.status(200).json(getUser);
-              
-            }
-            catch (err)
-            {
-                res.status(500).json({
-                    data: null,
-                    status: 500,
-                    success: false,
-                    message: err.message });
-            
-            }
+    // Accept a user
+    static async acceptUser(req, res) {
+        const { id } = req.params;
+
+        try {
+            const acceptUser = await Users.update({
+                confirmedByAdmin: 1
+            },
+                {
+                    where: { id: id }
+                });
+            res.status(200).json(acceptUser);
+
         }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+
+        }
+    }
 
 
-        
 
 
-    
-    
+
+
+
 }
 
 export default UsersController

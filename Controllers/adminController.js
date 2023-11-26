@@ -1,10 +1,20 @@
 import adminModel from "../Models/adminModel.js";
-
+import bcrypt from "bcrypt";
 class adminController {
   static async createAdmin(req, res) {
     try {
-      const newAdmin = await adminModel.create(req.body);
+      const { username, password } = req.body
+      if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/.test(password))) {
+        res.status(403).json({ message: 'Invalid password' })
+        return
+
+    }
+    else {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newAdmin = await adminModel.create({ username, password: hashedPassword });
       res.status(200).json(newAdmin);
+    }
+    
     } catch (err) {
       res.status(500).json({ message: err.message });
       console.log(err);

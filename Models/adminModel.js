@@ -13,9 +13,7 @@ const Admin = sequelize.define(
     },
     password: {
       type: DataTypes.STRING,
-      set(value) {
-        this.setDataValue("password", bcrypt.hashSync(value, 10));
-      },
+      
     },
   }
 );

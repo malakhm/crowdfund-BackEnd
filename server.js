@@ -6,7 +6,7 @@ import campaignRouter from './Routes/campaignsRouter.js'
 import donationsRouter from './Routes/donationsRouter.js'
 
 import userRouter from './Routes/usersRouter.js'
-
+import adminRouter from './Routes/adminRouter.js'
 
 import adminRouter from './Routes/adminRouter.js'
 dotenv.config()
@@ -24,7 +24,7 @@ app.use("/admin" , adminRouter)
 
 
 // routers
-// app.use('/api/products', productRouter)
+app.use('/api/users',userRouter)
 app.use('/api/donationRoute', donationsRouter)
 
 
@@ -38,4 +38,3 @@ app.listen(PORT, ()=>{
 })
 
 
-app.use('/api/users',userRouter)

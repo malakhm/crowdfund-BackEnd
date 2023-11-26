@@ -3,7 +3,7 @@ import {DataTypes} from "sequelize";
 import User from "../Models/usersModel.js"; // imported user for the relation
 import Campaign from "../Models/campaignsModel.js";
 
-const Donation= sequelize.define("Donation", {
+const Donation = sequelize.define("Donation", {
   
 
 //---------------------------------------------------------------------------------------------------------------------------------5

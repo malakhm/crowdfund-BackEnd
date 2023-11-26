@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../Config/con.js";
+import sequelize from "../Config/connection.js";
 import bcrypt from "bcrypt";
 // const sequelize = new Sequelize('');
 

@@ -396,6 +396,44 @@ static async createCampaign (req, res) {
   }
 }
 
+//change image ----------------------------------------------------------------------------------------------------
+static async changeCampaignImage (req, res) {
+  try {
+    const input_campaign_name = req.params.name; //put :name in url
+    if(req.file) { //-----------------------------------------------------------------first if statement openning
+      const [number_of_campaign_changed_rows_image] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
+        campaign_image: req.file.path,
+      },{
+        where: {
+          campaign_name: input_campaign_name,
+        },
+      });
+      if (number_of_campaign_changed_rows_image > 0) { //-------------------second if statement openning
+        res.status(200) //ok
+        .json({
+          data:null,
+          status: 200,
+          success: true,
+          message: `changed the campaign image successfully to: ${req.file.path}`,
+        });
+      } else {
+          res.status(404) //not found
+          .send("campaign name not found")
+        } //----------------------------------------------------------------second if statement closing
+    } else {
+    return res.status(404).send("Image file not found")
+  } //----------------------------------------------------------------------------------first if statement closing
+  } catch (error) {
+    return res.status(500) //internal server error
+    .json({
+      data: null,
+      status: 500,
+      success: false,
+      message: `Couldn't change image for the chosen campaign due to server error: ${error}`,
+    });
+  }
+}
+
 //change target ----------------------------------------------------------------------------------------------------
  static async changeCampaignTarget (req, res) {
   try {

@@ -1,11 +1,11 @@
 import CampaignController from "../Controllers/campaignsController.js";
-
+import {upload} from "../Config/cloudinary.js";
 import express from "express";
 
 const campaignRouter = express.Router();
 
 //Create ------------------------------------------------------------------------------
-campaignRouter.post("/post", CampaignController.createCampaign);
+campaignRouter.post("/post", upload.single('campaign_image'), CampaignController.createCampaign);
 //Read --------------------------------------------------------------------------------
 campaignRouter.get("/getAll", CampaignController.getAllCampaigns);
 campaignRouter.get("/getAllAccepted", CampaignController.getAcceptedCampaigns);

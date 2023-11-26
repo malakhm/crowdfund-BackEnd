@@ -1,4 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
+import multer from 'multer';
+import {CloudinaryStorage} from 'multer-storage-cloudinary';
 
 //configure
 cloudinary.config({
@@ -8,18 +10,13 @@ cloudinary.config({
   secure: true,
 });
 
-// const image = "./images/cake.jpg";
-
-//uploader
-export const runCloudinaryUploader = async (image_path) => {
-  console.log("started running cloudinary");
-  try {
-    const result = await cloudinary.uploader.upload(image_path);
-    console.log(result.secure_url);
-    return result.secure_url;
-  } catch(error){
-    console.log("error uploading image to cloudinary", error);
+//storage
+const cloudinary_storage = new CloudinaryStorage ({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'fund-for-all-images', //name of folder in cloudinary cloud
   }
-};
+});
 
-// runCloudinaryUploader(image)
+//multer uploader
+export const upload = multer({ storage: cloudinary_storage});

@@ -7,7 +7,7 @@ const Campaign = sequelize.define("Campaign", {
 //---------------------------------------------------------------------------------------------------------------------------------1
   description: {type: DataTypes.STRING, allowNull: false},
 //---------------------------------------------------------------------------------------------------------------------------------2
-  campaign_image: {type: DataTypes.STRING, allowNull: true},
+  campaign_image: {type: DataTypes.STRING, allowNull: true}, //made it true for the upload
 //---------------------------------------------------------------------------------------------------------------------------------3
   target: {type: DataTypes.INTEGER, allowNull: false}, //better for calculations
 //---------------------------------------------------------------------------------------------------------------------------------4

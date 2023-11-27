@@ -1,7 +1,9 @@
 import Users from '../Models/usersModel.js'
 import sequelize from '../Config/connection.js';
 import { Op } from "sequelize"
+
 import bcrypt from 'bcrypt'
+import cookieParser from 'cookie-parser';
 class UsersController {
     // get all users
     static async getAllUsers(req, res) {
@@ -59,6 +61,10 @@ class UsersController {
             isDonor,
             isCreator,
             confirmedByAdmin } = req.body;
+
+        // check if user already exists
+        const oldUser = await Users.findOne({ where: {username:username}});
+        if (oldUser) return res.status(409).json("user already exists!!");
         try {
             if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/.test(password))) {
                 res.status(403).json({ message: 'Invalid password' })
@@ -83,7 +89,7 @@ class UsersController {
                     confirmedByAdmin
                 }
             );
-            // Hash the password
+          
         
 
             res.status(200).json(createUser);

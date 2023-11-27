@@ -3,11 +3,7 @@ import {DataTypes} from "sequelize";
 import User from "./usersModel.js"; // imported user for the relation
 
 const Campaign = sequelize.define("Campaign", {
-  campaign_name: {type: DataTypes.STRING, allowNull: false, validate: { //try validate, if found benificial do it for all attributes
-    notnull: {
-      msg: "Please enter a name for the campaign"
-    }
-  }, unique: true},
+  campaign_name: {type: DataTypes.STRING, allowNull: false, unique: true},
 //---------------------------------------------------------------------------------------------------------------------------------1
   description: {type: DataTypes.STRING, allowNull: false},
 //---------------------------------------------------------------------------------------------------------------------------------2

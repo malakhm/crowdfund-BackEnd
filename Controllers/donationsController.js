@@ -1,10 +1,11 @@
 import Donation from '../Models/donationsModel.js';
-
+import Campaign from '../Models/campaignsModel.js';
+import User from '../Models/usersModel.js';
 class DonorController{
   // Get all donations
 static async getAllDonations (req, res) {
   try {
-    const allDonations = await Donation.findAll();
+    const allDonations = await Donation.findAll({include: [Campaign, User]});
     return res.status(200).json({
       data: allDonations,
       status: 200,

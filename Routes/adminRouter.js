@@ -4,6 +4,7 @@ import express from 'express'
 const adminRouter = express.Router();
 
 adminRouter.post('/', adminController.createAdmin);
+adminRouter.post('/signin', adminController.SignIn);
 
 adminRouter.get('/', adminController.findallAdmins);
 

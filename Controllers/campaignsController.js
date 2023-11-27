@@ -330,74 +330,6 @@ static async createCampaign (req, res) {
   }
 }
 
-//change campaign name ----------------------------------------------------------------------------------------------------
- static async changeCampaignName (req, res) {
-  try {
-    const campaign_name_to_change = req.params.name; //put :name in url
-    const new_campaign_name = req.params.newName; //put :newName in url
-    const [number_of_campaign_changed_rows_name] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
-      campaign_name: new_campaign_name,
-    },{
-      where: {
-        campaign_name: campaign_name_to_change,
-      },
-    });
-    if (number_of_campaign_changed_rows_name > 0) {
-      res.status(200) //ok
-      .json({
-        data: null,
-        status: 200,
-        success: true,
-        message: `changed the campaign name successfully from ${campaign_name_to_change} to: ${new_campaign_name}`,
-      });
-    } else {
-      res.sendStatus(404)
-    }
-  } catch (error) {
-    return res.status(500) //internal server error
-    .json({
-      data: null,
-      status: 500,
-      success: false,
-      message: `Couldn't change name of the chosen campaign due to server error: ${error}`,
-    });
-  }
-}
-
-//change description ----------------------------------------------------------------------------------------------------
- static async changeCampaignDescription (req, res) {
-  try {
-    const input_campaign_name = req.params.name; //put :name in url
-    const new_description = req.params.description; //put :description in url
-    const [number_of_campaign_changed_rows_description] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
-      description: new_description,
-    },{
-      where: {
-        campaign_name: input_campaign_name,
-      },
-    });
-    if (number_of_campaign_changed_rows_description > 0) {
-      res.status(200) //ok
-      .json({
-        data:null,
-        status: 200,
-        success: true,
-        message: `changed the campaign description successfully to: ${new_description}`,
-      });
-    } else {
-      res.sendStatus(404)
-    }
-  } catch (error) {
-    return res.status(500) //internal server error
-    .json({
-      data: null,
-      status: 500,
-      success: false,
-      message: `Couldn't change description for the chosen campaign due to server error: ${error}`,
-    });
-  }
-}
-
 //change image ----------------------------------------------------------------------------------------------------
 static async changeCampaignImage (req, res) {
   try {
@@ -470,40 +402,6 @@ static async changeCampaignImage (req, res) {
   }
 }
 
-//change amount manually ----------------------------------------------------------------------------------------------------
- static async changeCampaignAmount (req, res) {
-  try {
-    const input_campaign_name = req.params.name; //put :name in url
-    const new_amount = req.params.amount; //put :amount in url
-    const [number_of_campaign_changed_rows_amount] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
-      amount: new_amount,
-    },{
-      where: {
-        campaign_name: input_campaign_name,
-      },
-    });
-    if (number_of_campaign_changed_rows_amount > 0) {
-      res.status(200) //ok
-      .json({
-        data: null,
-        status: 200,
-        success: true,
-        message: `changed the campaign amount successfully to: ${new_amount}`,
-      });
-    } else {
-      res.sendStatus(404)
-    }
-  } catch (error) {
-    return res.status(500) //internal server error
-    .json({
-      data: null,
-      status: 500,
-      success: false,
-      message: `Couldn't change amount for the chosen campaign due to server error: ${error}`,
-    });
-  }
-}
-
 //cange amount as a donation ----------------------------------------------------------------------------------------------------
 static async addADonationToAmount (req, res) {
   const donation_transaction = await sequelize.transaction();
@@ -552,75 +450,6 @@ static async addADonationToAmount (req, res) {
       status: 500,
       success: false,
       message: `Couldn't add a donation amount for the campaign due to server error: ${error}`,
-    });
-  }
-}
-
-
-//change start date ----------------------------------------------------------------------------------------------------
- static async changeCampaignStartDate (req, res) {
-  try {
-    const input_campaign_name = req.params.name; //put :name in url
-    const new_start_date = req.params.startDate; //put :startDate in url using YYYY-MM-DD format and try it
-    const [number_of_campaign_changed_rows_start_date] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
-      start_date: new_start_date,
-    },{
-      where: {
-        campaign_name: input_campaign_name,
-      },
-    });
-    if (number_of_campaign_changed_rows_start_date > 0) {
-      res.status(200) //ok
-      .json({
-        data: null,
-        status: 200,
-        success: true,
-        message: `changed the campaign start date successfully to: ${new_start_date}`,
-      });
-    } else {
-      res.sendStatus(404)
-    }
-  } catch (error) {
-    return res.status(500) //internal server error
-    .json({
-      data: null,
-      status: 500,
-      success: false,
-      message: `Couldn't change start date for the chosen campaign due to server error: ${error}`,
-    });
-  }
-}
-
-//change end date ----------------------------------------------------------------------------------------------------
- static async changeCampaignEndDate (req, res) {
-  try {
-    const input_campaign_name = req.params.name; //put :name in url
-    const new_end_date = req.params.endDate; //put :endDate in url using YYYY-MM-DD format and try it
-    const [number_of_campaign_changed_rows_end_date] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
-      end_date: new_end_date,
-    },{
-      where: {
-        campaign_name: input_campaign_name,
-      },
-    });
-    if (number_of_campaign_changed_rows_end_date > 0) {
-      res.status(200) //ok
-      .json({
-        data: null, //convert to json to see object
-        status: 200,
-        success: true,
-        message: `changed the campaign end date successfully to: ${new_end_date}`,
-      });
-    } else {
-      res.sendStatus(404)
-    }
-  } catch (error) {
-    return res.status(500) //internal server error
-    .json({
-      data: null,
-      status: 500,
-      success: false,
-      message: `Couldn't change end date for the chosen campaign due to server error: ${error}`,
     });
   }
 }

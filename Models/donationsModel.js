@@ -3,7 +3,7 @@ import {DataTypes} from "sequelize";
 import User from "../Models/usersModel.js"; // imported user for the relation
 import Campaign from "../Models/campaignsModel.js";
 
-const Donation= sequelize.define("Donation", {
+const Donation = sequelize.define("Donation", {
   
 
 //---------------------------------------------------------------------------------------------------------------------------------1
@@ -20,6 +20,6 @@ Campaign.hasMany(Donation);
 Donation.belongsTo(Campaign) 
 
 
-Donation.sync({force:true});
+Donation.sync();
 
 export default Donation;

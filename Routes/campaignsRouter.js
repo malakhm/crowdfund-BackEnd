@@ -17,14 +17,9 @@ campaignRouter.get("/getByName/:name", CampaignController.getCampaignByCampaignN
 campaignRouter.put("/accept/:name", CampaignController.acceptCampaign);
 campaignRouter.put("/hide/:name", CampaignController.hideCampaign);
 campaignRouter.put("/unhide/:name", CampaignController.unhideCampaign);
-campaignRouter.put("/changeName/:name/:newName", CampaignController.changeCampaignName);
-campaignRouter.put("/changeDescription/:name/:description", CampaignController.changeCampaignDescription);
 campaignRouter.put("/changeImage/:name", upload.single('campaign_image'), CampaignController.changeCampaignImage);
 campaignRouter.put("/changeTarget/:name/:target", CampaignController.changeCampaignTarget);
-campaignRouter.put("/changeAmount/:name/:amount", CampaignController.changeCampaignAmount);
 campaignRouter.put("/addADonationToAmount/:userId/:campaignId/:amount", CampaignController.addADonationToAmount);
-campaignRouter.put("/changeStartDate/:name/:startDate", CampaignController.changeCampaignStartDate);
-campaignRouter.put("/changeEndDate/:name/:endDate", CampaignController.changeCampaignEndDate);
 //Delete ------------------------------------------------------------------------------
 campaignRouter.delete("/deleteByName/:name", CampaignController.deleteCampaignByCampaignName);
 campaignRouter.delete("/deleteAllPending", CampaignController.deletePendingCampaigns);

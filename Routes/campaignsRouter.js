@@ -22,6 +22,7 @@ campaignRouter.put("/changeDescription/:name/:description", CampaignController.c
 campaignRouter.put("/changeImage/:name", upload.single('campaign_image'), CampaignController.changeCampaignImage);
 campaignRouter.put("/changeTarget/:name/:target", CampaignController.changeCampaignTarget);
 campaignRouter.put("/changeAmount/:name/:amount", CampaignController.changeCampaignAmount);
+campaignRouter.put("/addADonationToAmount/:userId/:campaignId/:amount", CampaignController.addADonationToAmount);
 campaignRouter.put("/changeStartDate/:name/:startDate", CampaignController.changeCampaignStartDate);
 campaignRouter.put("/changeEndDate/:name/:endDate", CampaignController.changeCampaignEndDate);
 //Delete ------------------------------------------------------------------------------

@@ -1,4 +1,6 @@
+import sequelize from "../Config/connection.js"; //for donation transaction in amount change
 import Campaign from "../Models/campaignsModel.js";
+import Donation from "../Models/donationsModel.js";
 
 class CampaignController{
   //Post a Campaign ----------------------------------------------------------------------------------------------------
@@ -468,7 +470,7 @@ static async changeCampaignImage (req, res) {
   }
 }
 
-//change amount ----------------------------------------------------------------------------------------------------
+//change amount manually ----------------------------------------------------------------------------------------------------
  static async changeCampaignAmount (req, res) {
   try {
     const input_campaign_name = req.params.name; //put :name in url
@@ -501,6 +503,59 @@ static async changeCampaignImage (req, res) {
     });
   }
 }
+
+//cange amount as a donation ----------------------------------------------------------------------------------------------------
+static async addADonationToAmount (req, res) {
+  const donation_transaction = await sequelize.transaction();
+  try {
+    const related_user_id = req.params.userId; //must be used in creation of donation
+    const related_campaign_id = req.params.campaignId; //must be used in creation of donation
+    const new_amount = req.params.amount; //put :amount in url
+    const new_donation = await Donation.create({
+      amount: new_amount,
+      userId: related_user_id, //must assign the id of campaign in model instead
+      CampaignId: related_campaign_id, //must assign the id of campaign in model instead, c is capital from database
+    }, {transaction: donation_transaction});
+    const [number_of_campaign_changed_rows_amount] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
+      amount: sequelize.literal(`amount + ${new_donation.amount}`), //adds donation amount to total amount using raw sql
+    }, {
+      where: {
+        id: new_donation.CampaignId, //from db table
+      },
+      transaction: donation_transaction,
+    });
+    if (new_donation && number_of_campaign_changed_rows_amount > 0) {
+      await donation_transaction.commit(); //save the transaction
+      const [updated_campaign] = await Campaign.findAll({ //put it in array since find all is returning array of objects
+        where: {
+          id: related_campaign_id,
+        }
+      });
+      // const updated_campaign = updated_campaign_response.toJSON();
+      console.log("this is updated campaign: ", updated_campaign)
+      res.status(200) //ok
+      .json({
+        data: [new_donation.amount, updated_campaign.dataValues.amount], //amount added and total as an array; .dataValues is key of values' object in the returned object of objects
+        status: 200,
+        success: true,
+        message: `A donation of ${new_amount}, was successfully added to the campaign with the new total amount of ${updated_campaign.amount}`,
+      });
+    } else {
+      await donation_transaction.rollback(); //revoke transaction
+      res.sendStatus(404)
+    }
+  } catch (error) {
+    await donation_transaction.rollback(); //revoke transaction
+    return res.status(500) //internal server error
+    .json({
+      data: null,
+      status: 500,
+      success: false,
+      message: `Couldn't add a donation amount for the campaign due to server error: ${error}`,
+    });
+  }
+}
+
 
 //change start date ----------------------------------------------------------------------------------------------------
  static async changeCampaignStartDate (req, res) {

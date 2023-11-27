@@ -9,7 +9,7 @@ const Donation= sequelize.define("Donation", {
 //---------------------------------------------------------------------------------------------------------------------------------1
   amount: {type: DataTypes.INTEGER, allowNull: false},
 //---------------------------------------------------------------------------------------------------------------------------------2
-  date_of_donation: {type: DataTypes.DATEONLY, allowNull: false}, //use YYYY-MM-DD for input
+  //created date is being automatically created
 }
 )
 

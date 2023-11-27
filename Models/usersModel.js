@@ -13,10 +13,6 @@ const User = sequelize.define("users", {
     password :{
         type: DataTypes.STRING,
         allowNull: false,
-        set(value) {
-            const hash = bcrypt.hashSync(value, 10);
-            this.setDataValue('password', hash);
-        },
     },
     first_name: {
         type: DataTypes.STRING,

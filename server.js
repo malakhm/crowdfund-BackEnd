@@ -5,11 +5,13 @@ import bodyParser from 'body-parser'
 // import sequelize from './Config/connection.js'
 import campaignRouter from './Routes/campaignsRouter.js'
 import donationsRouter from './Routes/donationsRouter.js'
+
 import userRouter from './Routes/usersRouter.js'
 
 
 dotenv.config()
-
+ 
+sequelize.sync()
 // initialize express app
 const app = express()
 

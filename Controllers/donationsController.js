@@ -25,9 +25,9 @@ static async getAllDonations (req, res) {
 static async createDonation (req, res)  {
   try {
     const newDonation = await Donation.create(req.body);
-    return res.status(201).json({
+    return res.status(200).json({
       data: newDonation,
-      status: 201,
+      status: 200,
       success: true,
       message: 'Donation created successfully',
     });
@@ -104,7 +104,7 @@ static async  getDonationByDonorID  (req, res)  {
   const { requested_donor_id } = req.params;
   try {
     const donation = await Donation.findAll({ 
-      where:{donor_id: requested_donor_id}
+      where:{userId: requested_donor_id}
     });
     if (!donation) {
       return res.status(404).json({
@@ -130,6 +130,33 @@ static async  getDonationByDonorID  (req, res)  {
   }
 };
 
+
+// Get donation Sum & Count By Donor ID --TO DO
+static async getSum (req, res) {
+  const { id } = req.params;
+  
+
+  try {
+    const donation = await Donation.findAll({ 
+      where:{userId: id},});
+      let sum = 0 ;
+      let count = 0
+
+      for(let index=0; index < donation.length; index++)
+      {
+        sum += donation[index].amount;
+        count = index
+        
+
+      }
+      res.status(200).json(`sum is : $${sum} and count is : ${count}`);
+
+    
+  }
+  catch (err){
+    res.status(500).json({error: err})
+  }
+}
 
 
 //Get donation By campaign ID
@@ -162,6 +189,42 @@ static async  getDonationByCampaignID  (req, res)  {
     });
   }
 };
+
+// //Get donation Amount By campaign ID   --TO DO
+// static async getAmountByCampaignId(req, res) {
+//   const { id } = req.params;
+//   try {
+//     let amount = 0
+//     const donation = await Donation.findAll({ 
+//       where:{campaign_id: id}});
+//     if (!donation) {
+//       return res.status(404).json({
+//         data: null,
+//         status: 404,
+//         success: false,
+//         message: 'Donation not found',
+//       });
+//     }
+   
+//     return res.status(200).json({
+//       data: donation,
+//       status: 200,
+//       success: true,
+//       message: 'Retrieved donation by Donor ID successfully',
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       data: null,
+//       status: 500,
+//       success: false,
+//       message: `Couldn't retrieve donation due to server error: ${error}`, 
+//     });
+//   }
+// };
+
+
+
+
 
 // Get donation By  Both ID
 static async  getDonationByBothID  (req, res)  {
@@ -223,60 +286,6 @@ static async  updateDonation  (req, res)  {
       status: 500,
       success: false,
       message: `Couldn't update donation due to server error: ${error}`,
-    });
-  }
-};
-
-// Delete a donation by ID
-static async deleteDonationById (req, res)  {
-  const { id } = req.params;
-  try {
-    const deleted = await Donation.destroy({
-      where: { id },
-    });
-    if (deleted) {
-      return res.status(200).json({
-        data: null,
-        status: 200,
-        success: true,
-        message: 'Donation deleted successfully',
-      });
-    }
-    return res.status(404).json({
-      data: null,
-      status: 404,
-      success: false,
-      message: 'Donation not found',
-    });
-  } catch (error) {
-    return res.status(500).json({
-      data: null,
-      status: 500,
-      success: false,
-      message: `Couldn't delete donation due to server error: ${error}`,
-    });
-  }
-};
-
-// Delete all donations
-static async deleteAllDonations (req, res)  {
-  try {
-    await Donation.destroy({
-      where: {},
-      truncate: true,
-    });
-    return res.status(200).json({
-      data: null,
-      status: 200,
-      success: true,
-      message: 'All donations deleted successfully',
-    });
-  } catch (error) {
-    return res.status(500).json({
-      data: null,
-      status: 500,
-      success: false,
-      message: `Couldn't delete all donations due to server error: ${error}`,
     });
   }
 };

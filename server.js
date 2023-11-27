@@ -7,10 +7,11 @@ import donationsRouter from './Routes/donationsRouter.js'
 
 import userRouter from './Routes/usersRouter.js'
 import adminRouter from './Routes/adminRouter.js'
+import notificationRouter from './Routes/notificationsRouter.js'
 
-import adminRouter from './Routes/adminRouter.js'
 dotenv.config()
  
+sequelize.sync({alter:true})
 // initialize express app
 
 const app = express()
@@ -21,6 +22,8 @@ app.use("/api/campaignRoute", campaignRouter)
 app.use(express.json())
 app.use(cors())
 app.use("/admin" , adminRouter)
+app.use("/notifications" , notificationRouter)
+
 
 
 // routers
@@ -29,7 +32,7 @@ app.use('/api/donationRoute', donationsRouter)
 
 
 // port
-const PORT = process.env.PORT || 8090;
+const PORT = process.env.PORT || 8100;
 
 
 // server

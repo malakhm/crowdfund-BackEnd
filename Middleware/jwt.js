@@ -9,9 +9,7 @@ static async  verify(req, res, next) {
     return res.status(401).json({ message: 'No token provided' });
   }
 
-
   let token_split = token.split(" ");
-  console.log(token_split)
 
   jwt.verify(token_split[1], process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
 

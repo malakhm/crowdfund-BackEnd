@@ -3,8 +3,10 @@ import express from "express";
 
 const notificationRouter = express.Router();
 
+notificationRouter.create("/", notificationsController.addNotifcations);
+
 notificationRouter.get("/", notificationsController.findallNotifcations);
 
-notificationRouter.get("/", notificationsController.findNotificationsByPk);
+notificationRouter.get("/:id", notificationsController.findNotificationsByPk);
 
 export default notificationRouter;

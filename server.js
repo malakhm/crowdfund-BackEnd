@@ -60,6 +60,11 @@ io.on("connection", (socket) => { //needs frontend code to work
         socket.broadcast.emit("receive_announcement", announcement_message); //send announcement to all users in frontend, it is the same announcement received but sent as a different event to all through broadcast keyword
     });
 
+    socket.on("send_notification", (notification_message) => { //notification data will be sent and received as object: {message}
+      // console.log("notification data object: ", notification_message); //to check
+      socket.broadcast.emit("receive_notification", notification_message); //send notification to all users in frontend, it is the same notification received but sent as a different event to all through broadcast keyword
+  });
+
     socket.on("send_message", (message_data) => { //message data will be an object containing {message , room}, room is a number specified by user, each user putting same number will communicate with each others
         // console.log("message data object: ", message_data); //to check
         socket.to(message_data.room).emit("receive_message", message_data); //send message data as it is to room users instead of broadcast in frontend, specify which room users through message.room {message, room}.room

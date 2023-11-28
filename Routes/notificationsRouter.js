@@ -3,7 +3,7 @@ import express from "express";
 
 const notificationRouter = express.Router();
 
-notificationRouter.create("/", notificationsController.addNotifcations);
+notificationRouter.post("/", notificationsController.addNotifcations);
 
 notificationRouter.get("/", notificationsController.findallNotifcations);
 

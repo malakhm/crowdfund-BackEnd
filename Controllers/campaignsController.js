@@ -430,7 +430,7 @@ static async addADonationToAmount (req, res) {
         }
       });
       // const updated_campaign = updated_campaign_response.toJSON();
-      console.log("this is updated campaign: ", updated_campaign)
+      // console.log("this is updated campaign: ", updated_campaign)
       res.status(200) //ok
       .json({
         data: [new_donation.amount, updated_campaign.dataValues.amount], //amount added and total as an array; .dataValues is key of values' object in the returned object of objects

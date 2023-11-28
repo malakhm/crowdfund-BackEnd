@@ -45,11 +45,23 @@ class adminController {
 
             //evaluate password
             const match = await bcrypt.compare(password, foundUser.password);
+            
 
             if (match) {
                 //create JWTs
-              
-                res.json({ success: `User ${username} is logged in successfully, ${token}` });
+                const token = jwt.sign(
+                  {
+                    id: foundUser.id,
+                    isAdmin: true
+                  },
+               process.env.ACCESS_TOKEN_SECRET, 
+              {expiresIn: '1d'});
+
+          res.status(200).send({
+              id: foundUser.id,
+              username: foundUser.username,
+              accessToken: token,})
+              res.json({ success: `Admin ${username} is logged in successfully, ${token}` });
 
             }
 

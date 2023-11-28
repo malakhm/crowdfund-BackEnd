@@ -46,7 +46,7 @@ static async createDonation (req, res)  {
 static async getDonationById (req, res)  {
   const { id } = req.params;
   try {
-    const donation = await Donation.findByPk(id);
+    const donation = await Donation.findByPk(id, {include: [Campaign, User]});
     if (!donation) {
       return res.status(404).json({
         data: null,
@@ -75,7 +75,7 @@ static async getDonationById (req, res)  {
 static async getDonationAmountById  (req, res) {
   const { id } = req.params;
   try {
-    const donation = await Donation.findByPk(id);
+    const donation = await Donation.findByPk(id, {include: [Campaign, User]});
     if (!donation) {
       return res.status(404).json({
         data: null,

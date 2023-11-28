@@ -1,6 +1,7 @@
 import Donation from '../Models/donationsModel.js';
 import Campaign from '../Models/campaignsModel.js';
 import User from '../Models/usersModel.js';
+import sequelize from '../Config/connection.js';
 class DonorController{
   // Get all donations
 static async getAllDonations (req, res) {
@@ -25,9 +26,20 @@ static async getAllDonations (req, res) {
   // Create a donation
   static async createDonation(req, res) {
     try {
-      const newDonation = await Donation.create(req.body);
+   
+      const {userId, CampaignId, amount } = req.body
+      if(!userId || !CampaignId || !amount) 
+      {
+        return res.status(400).json({error: "missing statement!"});
+      }
+      const newDonation = await Donation.create({userId:userId, CampaignId:CampaignId, amount:amount })
+      const updatedCampaign = await Campaign.update(
+        { amount: sequelize.literal(`amount + ${amount}`) }, // Increment the amount
+        { where: { id: CampaignId } }
+      );
+      const donation = await Donation.findByPk(userId, {include: [Campaign, User]});
       return res.status(200).json({
-        data: newDonation,
+     
         status: 200,
         success: true,
         message: "Donation created successfully",

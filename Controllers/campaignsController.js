@@ -420,58 +420,54 @@ static async changeCampaignImage (req, res) {
     });
   }
 }
-};
-//cange amount as a donation ----------------------------------------------------------------------------------------------------
-static async addADonationToAmount (req, res) {
-  const donation_transaction = await sequelize.transaction();
+
+
+//get days difference
+static async daysDiff (req, res) {
   try {
-    const related_user_id = req.params.userId; //must be used in creation of donation
-    const related_campaign_id = req.params.campaignId; //must be used in creation of donation
-    const new_amount = req.params.amount; //put :amount in url
-    const new_donation = await Donation.create({
-      amount: new_amount,
-      userId: related_user_id, //must assign the id of campaign in model instead
-      CampaignId: related_campaign_id, //must assign the id of campaign in model instead, c is capital from database
-    }, {transaction: donation_transaction});
-    const [number_of_campaign_changed_rows_amount] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
-      amount: sequelize.literal(`amount + ${new_donation.amount}`), //adds donation amount to total amount using raw sql
-    }, {
-      where: {
-        id: new_donation.CampaignId, //from db table
-      },
-      transaction: donation_transaction,
+    const { id } = req.params
+   const date = await Campaign.findByPk(id, {
+    attributes: ['start_date', 'end_date'],
+  }) 
+  if (!date) {
+    return res.status(404).json({
+      data: null,
+      status: 404,
+      success: false,
+      message: `Campaign with ID ${id} not found`,
     });
-    if (new_donation && number_of_campaign_changed_rows_amount > 0) {
-      await donation_transaction.commit(); //save the transaction
-      const [updated_campaign] = await Campaign.findAll({ //put it in array since find all is returning array of objects
-        where: {
-          id: related_campaign_id,
-        }
+  }
+
+
+    // Convert date strings to Date objects
+    const startDate = new Date(date.start_date);
+    const endDate = new Date(date.end_date);
+
+    // Check if the date conversion was successful
+    if (isNaN(startDate) || isNaN(endDate)) {
+      return res.status(500).json({
+        data: null,
+        status: 500,
+        success: false,
+        message: 'Invalid date format in the database',
       });
-      // const updated_campaign = updated_campaign_response.toJSON();
-      // console.log("this is updated campaign: ", updated_campaign)
-      res.status(200) //ok
-      .json({
-        data: [new_donation.amount, updated_campaign.dataValues.amount], //amount added and total as an array; .dataValues is key of values' object in the returned object of objects
-        status: 200,
-        success: true,
-        message: `A donation of ${new_amount}, was successfully added to the campaign with the new total amount of ${updated_campaign.amount}`,
-      });
-    } else {
-      await donation_transaction.rollback(); //revoke transaction
-      res.sendStatus(404)
     }
+
+    // Calculate the difference in days
+    const timeDifference = endDate.getTime() - startDate.getTime();
+    const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+  res.status(200).json({message: `The difference in days is: ${daysDifference}`})
   } catch (error) {
-    await donation_transaction.rollback(); //revoke transaction
     return res.status(500) //internal server error
     .json({
       data: null,
       status: 500,
       success: false,
-      message: `Couldn't add a donation amount for the campaign due to server error: ${error}`,
+      message: `error is:  ${error}`,
     });
   }
 }
-
+}
 //export controllers ----------------------------------------------------------------------------------------------------
 export default CampaignController

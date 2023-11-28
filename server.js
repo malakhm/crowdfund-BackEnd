@@ -4,27 +4,37 @@ import cors from 'cors'
 import sequelize from './Config/connection.js'
 import campaignRouter from './Routes/campaignsRouter.js'
 import donationsRouter from './Routes/donationsRouter.js'
-
+import authRouter from './Routes/auth.js'
 import userRouter from './Routes/usersRouter.js'
 import adminRouter from './Routes/adminRouter.js'
+import bodyParser from 'body-parser'
+import adminAuthRouter from './Routes/adminAuth.js'
+import Verification from './Middleware/jwt.js'
+import http from "http";
+import { Server } from "socket.io";
 
+sequelize.sync()
 dotenv.config()
  
 // initialize express app
 const app = express();
 const server = http.createServer(app);
-
+const io = new Server(server);
 // middleware
 
-app.use("/api/campaignRoute", campaignRouter)
+
 app.use(express.json())
 app.use(cors())
-app.use("/admin" , adminRouter)
+
 
 
 // routers
 app.use('/api/users',userRouter)
 app.use('/api/donationRoute', donationsRouter)
+app.use("/admin", adminRouter)
+app.use("/api/campaignRoute",campaignRouter)
+app.use("/api/auth", authRouter)
+app.use("/api/admin/auth", adminAuthRouter)
 
 
 // port

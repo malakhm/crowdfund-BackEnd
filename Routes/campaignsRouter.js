@@ -13,16 +13,13 @@ campaignRouter.get("/getAllPending", Verification.verifyCreator,CampaignControll
 campaignRouter.get("/getAllHidden", Verification.verifyCreator,CampaignController.getHiddenCampaigns);
 campaignRouter.get("/getAllVisible", Verification.verifyLogin,CampaignController.getVisibleCampaigns);
 campaignRouter.get("/getByName/:id", Verification.verifyLogin,CampaignController.getCampaignByCampaignName);
+campaignRouter.get('/getdays/:id', Verification.verifyLogin,CampaignController.daysDiff)
 //Update ------------------------------------------------------------------------------
-campaignRouter.put("/accept/:name", CampaignController.acceptCampaign);
-campaignRouter.put("/hide/:name", CampaignController.hideCampaign);
-campaignRouter.put("/unhide/:name", CampaignController.unhideCampaign);
-campaignRouter.put("/changeName/:name/:newName", CampaignController.changeCampaignName);
-campaignRouter.put("/changeDescription/:name/:description", CampaignController.changeCampaignDescription);
-campaignRouter.put("/changeTarget/:name/:target", CampaignController.changeCampaignTarget);
-campaignRouter.put("/changeAmount/:name/:amount", CampaignController.changeCampaignAmount);
-campaignRouter.put("/changeStartDate/:name/:startDate", CampaignController.changeCampaignStartDate);
-campaignRouter.put("/changeEndDate/:name/:endDate", CampaignController.changeCampaignEndDate);
+campaignRouter.put("/accept/:name", Verification.verifyAdmin,CampaignController.acceptCampaign);
+campaignRouter.put("/hide/:name", Verification.verifyAdmin,CampaignController.hideCampaign);
+campaignRouter.put("/unhide/:name", Verification.verifyAdmin,CampaignController.unhideCampaign);
+campaignRouter.put("/changeImage/:name", upload.single('campaign_image'), Verification.verifyCreator,CampaignController.changeCampaignImage);
+// campaignRouter.put("/addADonationToAmount/:userId/:campaignId/:amount", Verification.verifyLogin,CampaignController.addADonationToAmount);
 //Delete ------------------------------------------------------------------------------
 campaignRouter.delete("/deleteByName/:name", Verification.verifyCreator,CampaignController.deleteCampaignByCampaignName);
 campaignRouter.delete("/deleteAllPending", Verification.verifyAdmin,CampaignController.deletePendingCampaigns);

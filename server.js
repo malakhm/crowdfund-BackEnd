@@ -27,10 +27,10 @@ app.use(bodyParser.urlencoded({
 
 
 // routers
-app.use('/api/users',Verification.verifyAdmin,userRouter)
-app.use('/api/donationRoute',Verification.verifyDonor, donationsRouter)
-app.use("/admin",Verification.verifyAdmin, adminRouter)
-app.use("/api/campaignRoute", Verification.verifyCreator,campaignRouter)
+app.use('/api/users',userRouter)
+app.use('/api/donationRoute', donationsRouter)
+app.use("/admin", adminRouter)
+app.use("/api/campaignRoute",campaignRouter)
 app.use("/api/auth", authRouter)
 app.use("/api/admin/auth", adminAuthRouter)
 // port

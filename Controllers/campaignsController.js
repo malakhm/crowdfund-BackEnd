@@ -1,5 +1,6 @@
 import sequelize from "../Config/connection.js"; //for donation transaction in amount change
 import Campaign from "../Models/campaignsModel.js";
+import User from "../Models/usersModel.js";
 import Donation from "../Models/donationsModel.js";
 
 class CampaignController{
@@ -31,11 +32,11 @@ static async createCampaign (req, res) {
     });
   }
 }
-
+// to populate :    const all_campaigns = await Campaign.findAll({include: [Donation, User]});
 //Get all campaigns ----------------------------------------------------------------------------------------------------
  static async getAllCampaigns (req, res) {
   try {
-    const all_campaigns = await Campaign.findAll();
+    const all_campaigns = await Campaign.findAll({include: [User]});
     if (all_campaigns && all_campaigns.length > 0) { //added an empty array condition since it is considered true by js
       return res.status(200) //ok
       .json({
@@ -63,6 +64,7 @@ static async createCampaign (req, res) {
     });
   }
 }
+
 
 //Get accepted campaigns ----------------------------------------------------------------------------------------------------
  static async getAcceptedCampaigns (req, res) {
@@ -208,17 +210,13 @@ static async createCampaign (req, res) {
   }
 }
 
-//Get campaign by campaignName ----------------------------------------------------------------------------------------------------
+//Get campaign by id ----------------------------------------------------------------------------------------------------
  static async getCampaignByCampaignName (req, res) {
   try {
-    const requested_campaign_name = req.params.name; //put :name in url as parameter
-    const requested_campaign = await Campaign.findAll({ //was findone, but its not working, try it again later
-      where: {
-        campaign_name: requested_campaign_name,
-      }
-    });
-    // console.log("this is requested campaign: ",requested_campaign);
-    if (requested_campaign && requested_campaign.length > 0) { //added.length > 0, since empty array is a truthy value
+    const { id }= req.params; //put :name in url as parameter
+    const requested_campaign = await Campaign.findByPk(id, {include:[User]});
+    if (requested_campaign ) { //added.length > 0, since empty array is a truthy value  
+      //&& requested_campaign.length > 0
       return res.status(200)
       .json({
         data: requested_campaign,
@@ -330,6 +328,7 @@ static async createCampaign (req, res) {
   }
 }
 
+
 //change image ----------------------------------------------------------------------------------------------------
 static async changeCampaignImage (req, res) {
   try {
@@ -368,91 +367,9 @@ static async changeCampaignImage (req, res) {
   }
 }
 
-//change target ----------------------------------------------------------------------------------------------------
- static async changeCampaignTarget (req, res) {
-  try {
-    const input_campaign_name = req.params.name; //put :name in url
-    const new_target = req.params.target; //put :target in url
-    const [number_of_campaign_changed_rows_target] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
-      target: new_target,
-    },{
-      where: {
-        campaign_name: input_campaign_name,
-      },
-    });
-    if (number_of_campaign_changed_rows_target > 0) {
-      res.status(200) //ok
-      .json({
-        data: null,
-        status: 200,
-        success: true,
-        message: `changed the campaign target successfully to: ${new_target}`,
-      });
-    } else {
-      res.sendStatus(404)
-    }
-  } catch (error) {
-    return res.status(500) //internal server error
-    .json({
-      data: null,
-      status: 500,
-      success: false,
-      message: `Couldn't change target for the chosen campaign due to server error: ${error}`,
-    });
-  }
-}
 
-//cange amount as a donation ----------------------------------------------------------------------------------------------------
-static async addADonationToAmount (req, res) {
-  const donation_transaction = await sequelize.transaction();
-  try {
-    const related_user_id = req.params.userId; //must be used in creation of donation
-    const related_campaign_id = req.params.campaignId; //must be used in creation of donation
-    const new_amount = req.params.amount; //put :amount in url
-    const new_donation = await Donation.create({
-      amount: new_amount,
-      userId: related_user_id, //must assign the id of campaign in model instead
-      CampaignId: related_campaign_id, //must assign the id of campaign in model instead, c is capital from database
-    }, {transaction: donation_transaction});
-    const [number_of_campaign_changed_rows_amount] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
-      amount: sequelize.literal(`amount + ${new_donation.amount}`), //adds donation amount to total amount using raw sql
-    }, {
-      where: {
-        id: new_donation.CampaignId, //from db table
-      },
-      transaction: donation_transaction,
-    });
-    if (new_donation && number_of_campaign_changed_rows_amount > 0) {
-      await donation_transaction.commit(); //save the transaction
-      const [updated_campaign] = await Campaign.findAll({ //put it in array since find all is returning array of objects
-        where: {
-          id: related_campaign_id,
-        }
-      });
-      // const updated_campaign = updated_campaign_response.toJSON();
-      // console.log("this is updated campaign: ", updated_campaign)
-      res.status(200) //ok
-      .json({
-        data: [new_donation.amount, updated_campaign.dataValues.amount], //amount added and total as an array; .dataValues is key of values' object in the returned object of objects
-        status: 200,
-        success: true,
-        message: `A donation of ${new_amount}, was successfully added to the campaign with the new total amount of ${updated_campaign.amount}`,
-      });
-    } else {
-      await donation_transaction.rollback(); //revoke transaction
-      res.sendStatus(404)
-    }
-  } catch (error) {
-    await donation_transaction.rollback(); //revoke transaction
-    return res.status(500) //internal server error
-    .json({
-      data: null,
-      status: 500,
-      success: false,
-      message: `Couldn't add a donation amount for the campaign due to server error: ${error}`,
-    });
-  }
-}
+
+
 
 //Delete a campaign by name ----------------------------------------------------------------------------------------------------
  static async deleteCampaignByCampaignName (req, res) {
@@ -504,6 +421,57 @@ static async addADonationToAmount (req, res) {
   }
 }
 };
+//cange amount as a donation ----------------------------------------------------------------------------------------------------
+static async addADonationToAmount (req, res) {
+  const donation_transaction = await sequelize.transaction();
+  try {
+    const related_user_id = req.params.userId; //must be used in creation of donation
+    const related_campaign_id = req.params.campaignId; //must be used in creation of donation
+    const new_amount = req.params.amount; //put :amount in url
+    const new_donation = await Donation.create({
+      amount: new_amount,
+      userId: related_user_id, //must assign the id of campaign in model instead
+      CampaignId: related_campaign_id, //must assign the id of campaign in model instead, c is capital from database
+    }, {transaction: donation_transaction});
+    const [number_of_campaign_changed_rows_amount] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
+      amount: sequelize.literal(`amount + ${new_donation.amount}`), //adds donation amount to total amount using raw sql
+    }, {
+      where: {
+        id: new_donation.CampaignId, //from db table
+      },
+      transaction: donation_transaction,
+    });
+    if (new_donation && number_of_campaign_changed_rows_amount > 0) {
+      await donation_transaction.commit(); //save the transaction
+      const [updated_campaign] = await Campaign.findAll({ //put it in array since find all is returning array of objects
+        where: {
+          id: related_campaign_id,
+        }
+      });
+      // const updated_campaign = updated_campaign_response.toJSON();
+      // console.log("this is updated campaign: ", updated_campaign)
+      res.status(200) //ok
+      .json({
+        data: [new_donation.amount, updated_campaign.dataValues.amount], //amount added and total as an array; .dataValues is key of values' object in the returned object of objects
+        status: 200,
+        success: true,
+        message: `A donation of ${new_amount}, was successfully added to the campaign with the new total amount of ${updated_campaign.amount}`,
+      });
+    } else {
+      await donation_transaction.rollback(); //revoke transaction
+      res.sendStatus(404)
+    }
+  } catch (error) {
+    await donation_transaction.rollback(); //revoke transaction
+    return res.status(500) //internal server error
+    .json({
+      data: null,
+      status: 500,
+      success: false,
+      message: `Couldn't add a donation amount for the campaign due to server error: ${error}`,
+    });
+  }
+}
 
 //export controllers ----------------------------------------------------------------------------------------------------
 export default CampaignController

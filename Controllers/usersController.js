@@ -1,7 +1,9 @@
-import Users from "../Models/usersModel.js";
-// import sequelize from "../Config/connection.js";
-// import { Op } from "sequelize";
-import bcrypt from "bcrypt";
+import Users from '../Models/usersModel.js'
+import sequelize from '../Config/connection.js';
+import { Op } from "sequelize"
+
+import bcrypt from 'bcrypt'
+import cookieParser from 'cookie-parser';
 class UsersController {
   // get all users
   static async getAllUsers(req, res) {
@@ -39,57 +41,64 @@ class UsersController {
     }
   }
 
-  // create a new user
-  static async createUser(req, res) {
-    const {
-      username,
-      password,
-      first_name,
-      last_name,
-      email,
-      dob,
-      gender,
-      phone_number,
-      isDonor,
-      isCreator,
-      confirmedByAdmin,
-    } = req.body;
-    try {
-      if (
-        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/.test(
-          password
-        )
-      ) {
-        res.status(403).json({ message: "Invalid password" });
-        return;
-      } else {
-      }
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const createUser = await Users.create({
-        username,
-        password: hashedPassword,
-        first_name,
-        last_name,
-        email,
-        dob,
-        gender,
-        phone_number,
-        isDonor,
-        isCreator,
-        confirmedByAdmin,
-      });
-      // Hash the password
+    // create a new user
+    static async createUser(req, res) {
+        const { username,
+            password,
+            first_name,
+            last_name,
+            email,
+            dob,
+            gender,
+            phone_number,
+            isDonor,
+            isCreator,
+            confirmedByAdmin } = req.body;
 
-      res.status(200).json(createUser);
-    } catch (err) {
-      res.status(500).json({
-        data: null,
-        status: 500,
-        success: false,
-        message: err.message,
-      });
+        // check if user already exists
+        const oldUser = await Users.findOne({ where: {username:username}});
+        if (oldUser) return res.status(409).json("user already exists!!");
+        try {
+            if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/.test(password))) {
+                res.status(403).json({ message: 'Invalid password' })
+                return
+
+            }
+            else {
+            }
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const createUser = await Users.create(
+                {
+                    username,
+                    password: hashedPassword,
+                    first_name,
+                    last_name,
+                    email,
+                    dob,
+                    gender,
+                    phone_number,
+                    isDonor,
+                    isCreator,
+                    confirmedByAdmin
+                }
+            );
+          
+        
+
+            res.status(200).json(createUser);
+
+
+        }
+        catch (err) {
+            res.status(500).json({
+                data: null,
+                status: 500,
+                success: false,
+                message: err.message
+            });
+        }
     }
-  }
+
 
   // update/edit a user
 

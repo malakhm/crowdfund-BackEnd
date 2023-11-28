@@ -1,50 +1,33 @@
-import dotenv from "dotenv";
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
-import http from "http";
-import { Server } from "socket.io";
+import dotenv from 'dotenv'
+import express  from 'express'
+import cors from 'cors'
+import sequelize from './Config/connection.js'
+import campaignRouter from './Routes/campaignsRouter.js'
+import donationsRouter from './Routes/donationsRouter.js'
 
-import sequelize from "./Config/connection.js";
+import userRouter from './Routes/usersRouter.js'
+import adminRouter from './Routes/adminRouter.js'
 
-import campaignRouter from "./Routes/campaignsRouter.js";
-import donationsRouter from "./Routes/donationsRouter.js";
-import userRouter from "./Routes/usersRouter.js";
-import notificationRouter from "./Routes/notificationsRouter.js";
-import adminRouter from "./Routes/adminRouter.js";
-
-dotenv.config();
-sequelize.sync();
-
+dotenv.config()
+ 
 // initialize express app
 const app = express();
 const server = http.createServer(app);
 
 // middleware
-// app.use(express.json())
-app.use(cors());
-const FRONT_END_PORT = process.env.FRONT_END_PORT;
-const io = new Server(server, {
-  cors: {
-    origin: `http://localhost:${FRONT_END_PORT}`,
-  },
-});
-app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
+
+app.use("/api/campaignRoute", campaignRouter)
+app.use(express.json())
+app.use(cors())
+app.use("/admin" , adminRouter)
+
 
 // routers
-app.use("/api/users", userRouter);
-app.use("/api/campaignRoute", campaignRouter);
-app.use("/api/donationRoute", donationsRouter);
-app.use("/api/adminRoute", adminRouter);
-app.use("/api/notificationRoute", notificationRouter);
+app.use('/api/users',userRouter)
+app.use('/api/donationRoute', donationsRouter)
 
-// server
-// back-end port
+
+// port
 const PORT = process.env.PORT || 8090;
 
 // websocket

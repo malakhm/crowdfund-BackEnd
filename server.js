@@ -27,15 +27,14 @@ app.use(express.json())
 app.use(cors())
 
 
-
 // routers
 app.use('/api/users',userRouter)
 app.use('/api/donationRoute', donationsRouter)
-app.use("/admin", adminRouter)
+app.use("/api/adminRoute", adminRouter)
 app.use("/api/campaignRoute",campaignRouter)
 app.use("/api/auth", authRouter)
 app.use("/api/admin/auth", adminAuthRouter)
-
+app.use("/api/notificationRoute", adminAuthRouter)
 
 // port
 const PORT = process.env.PORT || 8090;

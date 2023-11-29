@@ -39,7 +39,7 @@ static async getAllDonations (req, res) {
       );
       const donation = await Donation.findByPk(userId, {include: [Campaign, User]});
       return res.status(200).json({
-     
+        
         status: 200,
         success: true,
         message: "Donation created successfully",

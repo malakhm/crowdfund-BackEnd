@@ -67,7 +67,7 @@ class UsersController {
         if (oldUser) return res.status(409).json("user already exists!!");
         try {
             if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/.test(password))) {
-                res.status(403).json({ message: 'Invalid password' })
+                res.status(422).json({ message: 'weak password' })
                 return
 
             }
@@ -92,7 +92,11 @@ class UsersController {
           
         
 
-            res.status(200).json(createUser);
+            res.status(200).json({
+                    data: createUser,
+                    status: 200,
+                    success: true,
+                    message: "User has been added"})
 
 
         }

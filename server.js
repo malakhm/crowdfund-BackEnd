@@ -9,7 +9,7 @@ import userRouter from './Routes/usersRouter.js'
 import adminRouter from './Routes/adminRouter.js'
 import bodyParser from 'body-parser'
 import adminAuthRouter from './Routes/adminAuth.js'
-import Verification from './Middleware/jwt.js'
+
 import http from "http";
 import { Server } from "socket.io";
 
@@ -32,7 +32,7 @@ app.use('/api/users',userRouter)
 app.use('/api/donationRoute', donationsRouter)
 app.use("/api/adminRoute", adminRouter)
 app.use("/api/campaignRoute",campaignRouter)
-app.use("/api/auth", authRouter)
+app.use("/api/auth", authRouter)    
 app.use("/api/admin/auth", adminAuthRouter)
 app.use("/api/notificationRoute", adminAuthRouter)
 

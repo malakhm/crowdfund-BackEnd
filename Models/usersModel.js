@@ -31,7 +31,7 @@ const User = sequelize.define("users", {
         unique:true,
     },
     dob: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: false,
     },
     gender: {

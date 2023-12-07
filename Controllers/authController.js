@@ -11,6 +11,7 @@ class authController {
     static async handleLogin(req, res) {
         const { username, password } = req.body;
 
+        
 
         try {
             if (!username || !password)
@@ -26,9 +27,9 @@ class authController {
 
             //evaluate password
             const match = await bcrypt.compare(password, foundUser.password);
-
             if (match && foundUser.confirmedByAdmin) {
                 //create JWTs
+
                 // Authenticate user with jwt
                 const token = jwt.sign(
                     { 
@@ -42,11 +43,21 @@ class authController {
                 res.status(200).send({
                     id: foundUser.id,
                     username: foundUser.username,
+                    first_name: foundUser.first_name,
+                    last_name:foundUser.last_name,
+                    email:foundUser.email,
+                    dob:foundUser.dob,
+                    gender:foundUser.gender,
+                    phone_number:foundUser.phone_number,
+                    isDonor:foundUser.isDonor,
+                    isCreator:foundUser.isCreator,
+                    confirmedByAdmin:foundUser.confirmedByAdmin,
                     accessToken: token,
             },);}
-            else if(match){ res.status(401).json({message: "not accepted"})}
-            else{ res.status(401).json({message: "wrong password"});}
-            }catch (err) {
+            else if(match){ res.status(406).send({status: "406"})}
+            else{ res.status(401).send({status: "401"});}
+            }
+            catch (err) {
                 return res.status(500).send('Sign in error');
 
 

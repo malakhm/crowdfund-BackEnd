@@ -1,6 +1,7 @@
 import express from 'express';
 import usersController from '../Controllers/usersController.js'
 import Verification from '../Middleware/jwt.js';
+import UsersController from '../Controllers/usersController.js';
 
 const userRouter = express.Router()
 userRouter.get('/', Verification.verifyAdmin,usersController.getAllUsers); // get all users
@@ -13,4 +14,8 @@ userRouter.get('/getDonors/data', Verification.verifyLogin,usersController.getDo
 userRouter.get('/getCreators/data', Verification.verifyLogin,usersController.getCreators);// get all accepted Creators
 userRouter.get('/getPending/request', Verification.verifyAdmin,usersController.getPending); // get pending requests
 userRouter.put('/accept/:id', Verification.verifyAdmin,usersController.acceptUser)
+
+
 export default userRouter
+
+

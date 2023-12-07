@@ -8,8 +8,7 @@ const Donation= sequelize.define("Donation", {
 
 //---------------------------------------------------------------------------------------------------------------------------------5
   amount: {type: DataTypes.INTEGER, allowNull: false},
-//---------------------------------------------------------------------------------------------------------------------------------9
-  date_of_donation: {type: DataTypes.DATE, allowNull: false},
+
 }
 )
 
@@ -20,6 +19,6 @@ Campaign.hasMany(Donation);
 Donation.belongsTo(Campaign) 
 
 
-Donation.sync({force:true});
+Donation.sync();
 
 export default Donation;

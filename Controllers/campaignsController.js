@@ -9,7 +9,9 @@ static async createCampaign (req, res) {
   // console.log("this is the file: ",req.file)
   // console.log("this is the file path: ",req.file.path)
   try { 
+    let user_id = req.params.id;
     let new_campaign = new Campaign(req.body); //an instance of campaign gotten from body to manipulate it
+    new_campaign.userId = user_id;
     if (req.file) {
       new_campaign.campaign_image = req.file.path //path key is already passed in the object sent in the body form through multer
     }

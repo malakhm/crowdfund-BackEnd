@@ -5,7 +5,7 @@ import express from "express";
 const campaignRouter = express.Router();
 
 //Create ------------------------------------------------------------------------------
-campaignRouter.post("/post", upload.single('campaign_image'), CampaignController.createCampaign);
+campaignRouter.post("/post/:id", upload.single('campaign_image'), CampaignController.createCampaign);
 //Read --------------------------------------------------------------------------------
 campaignRouter.get("/getAll", CampaignController.getAllCampaigns);
 campaignRouter.get("/getAllAccepted", CampaignController.getAcceptedCampaigns);

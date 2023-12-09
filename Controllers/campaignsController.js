@@ -434,7 +434,7 @@ static async daysDiff (req, res) {
       data: null,
       status: 404,
       success: false,
-      message: `Campaign with ID ${id} not found`,
+      message: `Campaign with ID not found`,
     });
   }
 
@@ -457,7 +457,7 @@ static async daysDiff (req, res) {
     const timeDifference = endDate.getTime() - startDate.getTime();
     const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
 
-  res.status(200).json({message: `The difference in days is: ${daysDifference}`})
+  res.status(200).json(daysDifference)
   } catch (error) {
     return res.status(500) //internal server error
     .json({

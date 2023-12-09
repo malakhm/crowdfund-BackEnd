@@ -7,7 +7,7 @@ const campaignRouter = express.Router();
 //Create ------------------------------------------------------------------------------
 campaignRouter.post("/post",upload.single('campaign_image'),Verification.verifyCreator,CampaignController.createCampaign);
 //Read --------------------------------------------------------------------------------
-campaignRouter.get("/getAll", Verification.verifyCreator,CampaignController.getAllCampaigns);
+campaignRouter.get("/getAll", Verification.verifyLogin,CampaignController.getAllCampaigns);
 campaignRouter.get("/getAllAccepted", Verification.verifyAdmin,CampaignController.getAcceptedCampaigns);
 campaignRouter.get("/getAllPending", Verification.verifyCreator,CampaignController.getPendingCampaigns);
 campaignRouter.get("/getAllHidden", Verification.verifyCreator,CampaignController.getHiddenCampaigns);

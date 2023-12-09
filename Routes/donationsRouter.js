@@ -8,7 +8,7 @@ const donationsRouter = express.Router();
 donationsRouter.get('/',Verification.verifyLogin, DonorController.getAllDonations);
 
 // Route for creating a new donation
-donationsRouter.post('/', Verification.verifyDonor,DonorController.createDonation);
+donationsRouter.post('/',DonorController.createDonation);
 
 // Route for getting a donation by ID
 donationsRouter.get('/:id',Verification.verifyLogin, DonorController.getDonationById);

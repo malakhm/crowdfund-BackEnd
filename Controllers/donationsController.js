@@ -171,7 +171,7 @@ static async getDonationAmountById  (req, res) {
     const { requested_campaign_id } = req.params;
     try {
       const donation = await Donation.findAll({
-        where: { campaign_id: requested_campaign_id },
+        where: { CampaignId: requested_campaign_id },
       });
       if (!donation) {
         return res.status(404).json({
@@ -181,12 +181,7 @@ static async getDonationAmountById  (req, res) {
           message: "Donation not found",
         });
       }
-      return res.status(200).json({
-        data: donation,
-        status: 200,
-        success: true,
-        message: "Retrieved donation by Donor ID successfully",
-      });
+      return res.status(200).json(donation);
     } catch (error) {
       return res.status(500).json({
         data: null,

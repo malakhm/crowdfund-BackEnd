@@ -5,8 +5,8 @@ import UsersController from '../Controllers/usersController.js';
 
 const userRouter = express.Router()
 userRouter.get('/', Verification.verifyAdmin,usersController.getAllUsers); // get all users
-userRouter.post('/', Verification.verifyLogin,usersController.createUser); // create user
-userRouter.get('/:id', Verification.verifyLogin,usersController.getOneUser);// get user by id
+userRouter.post('/',usersController.createUser); // create user
+userRouter.get('/:id',usersController.getOneUser);// get user by id
 userRouter.put('/:id', Verification.verifyLogin,usersController.editUser); // update user
 userRouter.delete('/:id', Verification.verifyAdmin,usersController.deleteUser);// delete user
 userRouter.get('/getbyusername/:username', Verification.verifyLogin,usersController.getByUsername); // get user by username

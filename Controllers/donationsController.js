@@ -118,6 +118,8 @@ static async getDonationAmountById  (req, res) {
     try {
       const donation = await Donation.findAll({
         where: { userId: requested_donor_id },
+        include: [Campaign, User]
+        
       });
       if (!donation) {
         return res.status(404).json({
@@ -158,7 +160,7 @@ static async getDonationAmountById  (req, res) {
         sum += donation[index].amount;
         count = index;
       }
-      res.status(200).json(`sum is : $${sum} and count is : ${count}`);
+      res.status(200).json({sum:sum, count: count});
     } catch (err) {
       res.status(500).json({ error: err });
     }

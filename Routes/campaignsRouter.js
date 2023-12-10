@@ -5,7 +5,7 @@ import Verification from '../Middleware/jwt.js'
 const campaignRouter = express.Router();
 
 //Create ------------------------------------------------------------------------------
-campaignRouter.post("/post",upload.single('campaign_image'),Verification.verifyCreator,CampaignController.createCampaign);
+campaignRouter.post("/post/:userId",upload.single('campaign_image'),CampaignController.createCampaign);
 //Read --------------------------------------------------------------------------------
 campaignRouter.get("/getAll", Verification.verifyLogin,CampaignController.getAllCampaigns);
 campaignRouter.get("/getAllAccepted", Verification.verifyAdmin,CampaignController.getAcceptedCampaigns);
@@ -18,7 +18,7 @@ campaignRouter.get('/getdays/:id', Verification.verifyLogin,CampaignController.d
 campaignRouter.put("/accept/:name", Verification.verifyAdmin,CampaignController.acceptCampaign);
 campaignRouter.put("/hide/:name", Verification.verifyAdmin,CampaignController.hideCampaign);
 campaignRouter.put("/unhide/:name", Verification.verifyAdmin,CampaignController.unhideCampaign);
-campaignRouter.put("/changeImage/:name", upload.single('campaign_image'), Verification.verifyCreator,CampaignController.changeCampaignImage);
+campaignRouter.put("/changeImage/:name", upload.single('campaign_image'),CampaignController.changeCampaignImage);
 // campaignRouter.put("/addADonationToAmount/:userId/:campaignId/:amount", Verification.verifyLogin,CampaignController.addADonationToAmount);
 //Delete ------------------------------------------------------------------------------
 campaignRouter.delete("/deleteByName/:name", Verification.verifyCreator,CampaignController.deleteCampaignByCampaignName);

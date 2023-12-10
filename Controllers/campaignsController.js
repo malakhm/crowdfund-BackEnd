@@ -14,6 +14,8 @@ static async createCampaign (req, res) {
     if (req.file) {
       new_campaign.campaign_image = req.file.path //path key is already passed in the object sent in the body form through multer
     }
+    const userId = req.params.userId
+  new_campaign.userId = userId
     const saved_new_campaign = await new_campaign.save(); //saving the manipulated instance to the db
     return res.status(201) //created
     .json({

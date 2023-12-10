@@ -4,16 +4,16 @@ import Verification from '../Middleware/jwt.js';
 import UsersController from '../Controllers/usersController.js';
 
 const userRouter = express.Router()
-userRouter.get('/', Verification.verifyAdmin,usersController.getAllUsers); // get all users
+userRouter.get('/', usersController.getAllUsers); // get all users Verification.verifyAdmin,
 userRouter.post('/',usersController.createUser); // create user
 userRouter.get('/:id',usersController.getOneUser);// get user by id
-userRouter.put('/:id', Verification.verifyLogin,usersController.editUser); // update user
-userRouter.delete('/:id', Verification.verifyAdmin,usersController.deleteUser);// delete user
-userRouter.get('/getbyusername/:username', Verification.verifyLogin,usersController.getByUsername); // get user by username
-userRouter.get('/getDonors/data', Verification.verifyLogin,usersController.getDonors); // get all accepted Donors
-userRouter.get('/getCreators/data', Verification.verifyLogin,usersController.getCreators);// get all accepted Creators
-userRouter.get('/getPending/request', Verification.verifyAdmin,usersController.getPending); // get pending requests
-userRouter.put('/accept/:id', Verification.verifyAdmin,usersController.acceptUser)
+userRouter.put('/:id', usersController.editUser); // update user Verification.verifyLogin,
+userRouter.delete('/:id', usersController.deleteUser);// delete user Verification.verifyAdmin,
+userRouter.get('/getbyusername/:username', usersController.getByUsername); // get user by username Verification.verifyLogin,
+userRouter.get('/getDonors/data', usersController.getDonors); // get all accepted Donors Verification.verifyLogin,
+userRouter.get('/getCreators/data', usersController.getCreators);// get all accepted Creators Verification.verifyLogin,
+userRouter.get('/getPending/request', usersController.getPending); // get pending requests Verification.verifyAdmin,
+userRouter.put('/accept/:id', usersController.acceptUser) // Verification.verifyAdmin,
 
 
 export default userRouter

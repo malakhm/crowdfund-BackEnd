@@ -2,8 +2,10 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import http from "http";
+import { createServer } from 'node:http';
 import { Server } from "socket.io";
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
 import sequelize from "./Config/connection.js";
 import authRouter from './Routes/auth.js'
@@ -19,8 +21,11 @@ sequelize.sync();
 
 // initialize express app
 const app = express();
-const server = http.createServer(app);
+const server = createServer(app);
 const io = new Server(server);
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 // middleware
 const FRONT_END_PORT = process.env.FRONT_END_PORT;
 app.use(cors());
@@ -30,6 +35,10 @@ app.use(
     extended: true,
   })
 );
+
+app.get('/', (req, res) => {
+  res.sendFile(join(__dirname, '../crowdfund-FrontEnd/frontend/src/websocket.html'));
+});
 
 // const io = new SocketIOServer(server, {
 //   cors: {
@@ -70,7 +79,9 @@ io.on('connection', (socket) => {
   });
 });
 
-server.listen
+server.listen(3001, () => {
+  console.log(`server is running on port: ${PORT}`);
+})
 
 app.listen(PORT, () => {
   console.log(`server is running on port: ${PORT}`);

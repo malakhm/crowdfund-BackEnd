@@ -5,28 +5,28 @@ import Verification from '../Middleware/jwt.js'
 const donationsRouter = express.Router();
 
 // Route for getting all donations
-donationsRouter.get('/', DonorController.getAllDonations); //Verification.verifyLogin, 
+donationsRouter.get('/', Verification.verifyLogin,DonorController.getAllDonations);
 
 // Route for creating a new donation
 donationsRouter.post('/', DonorController.createDonation);
 
 // Route for getting a donation by ID
-donationsRouter.get('/:id', DonorController.getDonationById); //Verification.verifyLogin,
+donationsRouter.get('/:id', Verification.verifyLogin,DonorController.getDonationById);
 
 // Route for getting donation amount by ID
-donationsRouter.get('/amount/:id',DonorController.getDonationAmountById); //Verification.verifyLogin, 
+donationsRouter.get('/amount/:id', Verification.verifyLogin,DonorController.getDonationAmountById); 
 
 // Route for getting donations by donor ID
-donationsRouter.get('/donor/:requested_donor_id',DonorController.getDonationByDonorID); //Verification.verifyDonor, 
+donationsRouter.get('/donor/:requested_donor_id',Verification.verifyDonor,DonorController.getDonationByDonorID); 
 
 
 // Route for getting donations by campaign ID
-donationsRouter.get('/campaign/:requested_campaign_id', DonorController.getDonationByCampaignID); //Verification.verifyLogin, 
+donationsRouter.get('/campaign/:requested_campaign_id', Verification.verifyLogin, DonorController.getDonationByCampaignID); 
 
 // Route for updating a donation by ID
-donationsRouter.put('/:id', DonorController.updateDonation); //Verification.verifyAdmin,
+donationsRouter.put('/:id', Verification.verifyAdmin,DonorController.updateDonation);
 
-donationsRouter.get('/donation/sum/:id', DonorController.getSum) //Verification.verifyDonor,
+donationsRouter.get('/donation/sum/:id', Verification.verifyDonor,DonorController.getSum)
 
 // Export the router
 export default donationsRouter;

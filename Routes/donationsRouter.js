@@ -8,7 +8,7 @@ const donationsRouter = express.Router();
 donationsRouter.get('/',Verification.verifyLogin, DonorController.getAllDonations);
 
 // Route for creating a new donation
-donationsRouter.post('/', Verification.verifyDonor,DonorController.createDonation);
+donationsRouter.post('/',DonorController.createDonation);
 
 // Route for getting a donation by ID
 donationsRouter.get('/:id',Verification.verifyLogin, DonorController.getDonationById);
@@ -18,6 +18,7 @@ donationsRouter.get('/amount/:id',Verification.verifyLogin, DonorController.getD
 
 // Route for getting donations by donor ID
 donationsRouter.get('/donor/:requested_donor_id',Verification.verifyDonor, DonorController.getDonationByDonorID);
+
 
 // Route for getting donations by campaign ID
 donationsRouter.get('/campaign/:requested_campaign_id',Verification.verifyLogin, DonorController.getDonationByCampaignID);
@@ -29,4 +30,3 @@ donationsRouter.get('/donation/sum/:id', Verification.verifyDonor,DonorControlle
 
 // Export the router
 export default donationsRouter;
-

@@ -1,13 +1,25 @@
+import sequelize from "../Config/connection.js"; //for donation transaction in amount change
 import Campaign from "../Models/campaignsModel.js";
 import User from "../Models/usersModel.js";
+import Donation from "../Models/donationsModel.js";
+
 class CampaignController{
   //Post a Campaign ----------------------------------------------------------------------------------------------------
 static async createCampaign (req, res) {
+  // console.log("this is the body: ",req.body)
+  // console.log("this is the file: ",req.file)
+  // console.log("this is the file path: ",req.file.path)
   try { 
-    const new_campaign = await Campaign.create(req.body);
+    let new_campaign = new Campaign(req.body); //an instance of campaign gotten from body to manipulate it
+    if (req.file) {
+      new_campaign.campaign_image = req.file.path //path key is already passed in the object sent in the body form through multer
+    }
+    const userId = req.params.userId
+  new_campaign.userId = userId
+    const saved_new_campaign = await new_campaign.save(); //saving the manipulated instance to the db
     return res.status(201) //created
     .json({
-      data: new_campaign.toJSON(), //used tojson() to show the data and not the instance details
+      data: saved_new_campaign.toJSON(), //used tojson() to show the data and not the instance details
       status: 201,
       success: true,
       message: "Campaign added"
@@ -60,9 +72,8 @@ static async createCampaign (req, res) {
  static async getAcceptedCampaigns (req, res) {
   try {
     const accepted_campaigns = await Campaign.findAll({
-      where: {
-        isAccepted: true,
-      }
+      where: {isAccepted: true},
+      include: [User]
     })
     if (accepted_campaigns && accepted_campaigns.length > 0) { //added an empty array condition to only accept relevant data
       return res.status(200)
@@ -170,6 +181,7 @@ static async createCampaign (req, res) {
     const visible_campaigns = await Campaign.findAll({
       where: {
         isHidden: false,
+        isAccepted:true
       }
     })
     if (visible_campaigns && visible_campaigns.length > 0) { //since [] is read as true, we added the.length > 0 condition
@@ -319,6 +331,44 @@ static async createCampaign (req, res) {
 }
 
 
+//change image ----------------------------------------------------------------------------------------------------
+static async changeCampaignImage (req, res) {
+  try {
+    const input_campaign_name = req.params.name; //put :name in url
+    if(req.file) { //-----------------------------------------------------------------first if statement openning
+      const [number_of_campaign_changed_rows_image] = await Campaign.update({ //we put campaign rows in array since update() returns an array with updated row numbers
+        campaign_image: req.file.path,
+      },{
+        where: {
+          campaign_name: input_campaign_name,
+        },
+      });
+      if (number_of_campaign_changed_rows_image > 0) { //-------------------second if statement openning
+        res.status(200) //ok
+        .json({
+          data:null,
+          status: 200,
+          success: true,
+          message: `changed the campaign image successfully to: ${req.file.path}`,
+        });
+      } else {
+          res.status(404) //not found
+          .send("campaign name not found")
+        } //----------------------------------------------------------------second if statement closing
+    } else {
+    return res.status(404).send("Image file not found")
+  } //----------------------------------------------------------------------------------first if statement closing
+  } catch (error) {
+    return res.status(500) //internal server error
+    .json({
+      data: null,
+      status: 500,
+      success: false,
+      message: `Couldn't change image for the chosen campaign due to server error: ${error}`,
+    });
+  }
+}
+
 
 
 
@@ -373,9 +423,53 @@ static async createCampaign (req, res) {
   }
 }
 
+
+//get days difference
+static async daysDiff (req, res) {
+  try {
+    const { id } = req.params
+   const date = await Campaign.findByPk(id, {
+    attributes: ['start_date', 'end_date'],
+  }) 
+  if (!date) {
+    return res.status(404).json({
+      data: null,
+      status: 404,
+      success: false,
+      message: `Campaign with ID not found`,
+    });
+  }
+
+
+    // Convert date strings to Date objects
+    const startDate = new Date(date.start_date);
+    const endDate = new Date(date.end_date);
+
+    // Check if the date conversion was successful
+    if (isNaN(startDate) || isNaN(endDate)) {
+      return res.status(500).json({
+        data: null,
+        status: 500,
+        success: false,
+        message: 'Invalid date format in the database',
+      });
+    }
+
+    // Calculate the difference in days
+    const timeDifference = endDate.getTime() - startDate.getTime();
+    const daysDifference = timeDifference / (1000 * 60 * 60 * 24);
+
+  res.status(200).json(daysDifference)
+  } catch (error) {
+    return res.status(500) //internal server error
+    .json({
+      data: null,
+      status: 500,
+      success: false,
+      message: `error is:  ${error}`,
+    });
+  }
 }
-
-
+}
 //export controllers ----------------------------------------------------------------------------------------------------
-
 export default CampaignController

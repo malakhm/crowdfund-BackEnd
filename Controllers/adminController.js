@@ -100,15 +100,6 @@ class adminController {
     }
   }
 
-  static async findallAdmins(req, res) {
-    try {
-      const findAdmins = await adminModel.findAll();
-      res.status(200).json(findAdmins);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-      console.log(err);
-    }
-  }
   static async findAdminByPk(req, res) {
     try {
       const findAdmin = await adminModel.findByPk(req.params.id);

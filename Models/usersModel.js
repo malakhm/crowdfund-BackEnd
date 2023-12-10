@@ -1,7 +1,6 @@
 import sequelize from "../Config/connection.js"
 import { DataTypes } from "sequelize"
 
-import bcrypt from 'bcrypt'
 const User = sequelize.define("users", {
 
     username: {
@@ -29,7 +28,7 @@ const User = sequelize.define("users", {
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique:true,
     },
     dob: {
         type: DataTypes.DATEONLY,
@@ -63,6 +62,4 @@ const User = sequelize.define("users", {
 
 })
 
-
-User.sync()
 export default User

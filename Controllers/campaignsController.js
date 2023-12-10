@@ -72,9 +72,8 @@ static async createCampaign (req, res) {
  static async getAcceptedCampaigns (req, res) {
   try {
     const accepted_campaigns = await Campaign.findAll({
-      where: {
-        isAccepted: true,
-      }
+      where: {isAccepted: true},
+      include: [User]
     })
     if (accepted_campaigns && accepted_campaigns.length > 0) { //added an empty array condition to only accept relevant data
       return res.status(200)
@@ -182,6 +181,7 @@ static async createCampaign (req, res) {
     const visible_campaigns = await Campaign.findAll({
       where: {
         isHidden: false,
+        isAccepted:true
       }
     })
     if (visible_campaigns && visible_campaigns.length > 0) { //since [] is read as true, we added the.length > 0 condition

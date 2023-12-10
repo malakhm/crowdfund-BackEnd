@@ -14,6 +14,7 @@ campaignRouter.get("/getAllHidden", Verification.verifyCreator,CampaignControlle
 campaignRouter.get("/getAllVisible", Verification.verifyLogin,CampaignController.getVisibleCampaigns);
 campaignRouter.get("/getByName/:id", Verification.verifyLogin,CampaignController.getCampaignByCampaignName);
 campaignRouter.get('/getdays/:id', Verification.verifyLogin,CampaignController.daysDiff)
+campaignRouter.get('/getById/:userId', Verification.verifyLogin,CampaignController.getCampaignByCreatorId)
 //Update ------------------------------------------------------------------------------
 campaignRouter.put("/accept/:name", Verification.verifyAdmin,CampaignController.acceptCampaign);
 campaignRouter.put("/hide/:name", Verification.verifyAdmin,CampaignController.hideCampaign);

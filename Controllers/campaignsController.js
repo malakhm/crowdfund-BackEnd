@@ -182,7 +182,10 @@ static async createCampaign (req, res) {
       where: {
         isHidden: false,
         isAccepted:true
-      }
+      },
+      include: [User]
+
+      
     })
     if (visible_campaigns && visible_campaigns.length > 0) { //since [] is read as true, we added the.length > 0 condition
       return res.status(200)

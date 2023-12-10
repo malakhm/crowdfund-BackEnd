@@ -1,6 +1,6 @@
 import sequelize from "../Config/connection.js";
 import {DataTypes} from "sequelize";
-import User from "./usersModel.js"; // imported user for the relation
+import User from "../Models/usersModel.js"; // imported user for the relation
 
 const Campaign = sequelize.define("Campaign", {
   campaign_name: {type: DataTypes.STRING, allowNull: false, unique: true},

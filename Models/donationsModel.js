@@ -3,12 +3,14 @@ import { DataTypes } from "sequelize";
 import User from "../Models/usersModel.js"; // imported user for the relation
 import Campaign from "../Models/campaignsModel.js";
 
-const Donation = sequelize.define("Donation", {
-  //---------------------------------------------------------------------------------------------------------------------------------1
-  amount: { type: DataTypes.INTEGER, allowNull: false },
-  //---------------------------------------------------------------------------------------------------------------------------------2
-  //created date is being automatically created
-});
+const Donation= sequelize.define("Donation", {
+  
+
+//---------------------------------------------------------------------------------------------------------------------------------5
+  amount: {type: DataTypes.INTEGER, allowNull: false},
+
+}
+)
 
 User.hasMany(Donation);
 Donation.belongsTo(User);

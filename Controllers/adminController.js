@@ -1,79 +1,83 @@
 import adminModel from "../Models/adminModel.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 
-dotenv.config()
+dotenv.config();
 class adminController {
   static async createAdmin(req, res) {
     try {
-      const { username, password } = req.body
-      if (!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/.test(password))) {
-        res.status(403).json({ message: 'Weak Password' })
-        return
-
-    }
-    else {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const newAdmin = await adminModel.create({ username, password: hashedPassword });
-      res.status(200).json(newAdmin);
-    }
-    
+      const { username, password } = req.body;
+      if (
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,12}$/.test(
+          password
+        )
+      ) {
+        res.status(403).json({ message: "Weak Password" });
+        return;
+      } else {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newAdmin = await adminModel.create({
+          username,
+          password: hashedPassword,
+        });
+        res.status(200).json(newAdmin);
+      }
     } catch (err) {
       res.status(500).json({ message: err.message });
       console.log(err);
     }
   }
 
-
   static async SignIn(req, res) {
     const { username, password } = req.body;
 
+    try {
+      if (!username || !password)
+        return res.status(400).json(
+          //400 means bad request
+          {
+            message: "username and password are required fields! ",
+          }
+        );
+      const foundUser = await adminModel.findOne({
+        where: { username: username },
+      });
 
-        try {
-            if (!username || !password)
-                return res.status(400).json( //400 means bad request
-                    {
-                        message: 'username and password are required fields! ',
-                    });
-            const foundUser = await adminModel.findOne({ where: { username: username } });
+      if (!foundUser) {
+        return res.status(401).json({ alert: "unauthorized login 1" }); //401 means unauthorized
+      }
 
-            if (!foundUser) {
-                return res.status(401).json({ alert: "unauthorized login 1" });; //401 means unauthorized 
-            }
+      //evaluate password
+      const match = await bcrypt.compare(password, foundUser.password);
 
-            //evaluate password
-            const match = await bcrypt.compare(password, foundUser.password);
-            
+      if (match) {
+        //create JWTs
+        const token = jwt.sign(
+          {
+            id: foundUser.id,
+            isAdmin: true,
+          },
+          process.env.ACCESS_TOKEN_SECRET,
+          { expiresIn: "1d" }
+        );
 
-            if (match) {
-                //create JWTs
-                const token = jwt.sign(
-                  {
-                    id: foundUser.id,
-                    isAdmin: true
-                  },
-               process.env.ACCESS_TOKEN_SECRET, 
-              {expiresIn: '1d'});
-
-          res.status(200).send({
-              id: foundUser.id,
-              username: foundUser.username,
-              accessToken: token,})
-              res.json({ success: `Admin ${username} is logged in successfully, ${token}` });
-
-            }
-
-            else {
-                res.status(401).json({ alert: "unauthorized login" }); //401 means unauthorized
-            }
-        }
-        catch (err) {
-            res.status(500)
-        }
-
+        res.status(200).send({
+          id: foundUser.id,
+          username: foundUser.username,
+          accessToken: token,
+        });
+        res.json({
+          success: `Admin ${username} is logged in successfully, ${token}`,
+        });
+      } else {
+        res.status(401).json({ alert: "unauthorized login" }); //401 means unauthorized
+      }
+    } catch (err) {
+      res.status(500);
     }
+  }
 
   static async findallAdmins(req, res) {
     try {

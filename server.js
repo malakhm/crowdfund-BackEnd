@@ -11,7 +11,7 @@ import bodyParser from 'body-parser'
 import adminAuthRouter from './Routes/adminAuth.js'
 
 import http from "http";
-import { Server } from "socket.io";
+// import { Server } from "socket.io";
 
 sequelize.sync()
 dotenv.config()

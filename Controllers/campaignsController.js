@@ -10,7 +10,9 @@ static async createCampaign (req, res) {
   // console.log("this is the file: ",req.file)
   // console.log("this is the file path: ",req.file.path)
   try { 
+    let user_id = req.params.id;
     let new_campaign = new Campaign(req.body); //an instance of campaign gotten from body to manipulate it
+    new_campaign.userId = user_id;
     if (req.file) {
       new_campaign.campaign_image = req.file.path //path key is already passed in the object sent in the body form through multer
     }
@@ -182,7 +184,10 @@ static async createCampaign (req, res) {
       where: {
         isHidden: false,
         isAccepted:true
-      }
+      },
+      include: [User]
+
+      
     })
     if (visible_campaigns && visible_campaigns.length > 0) { //since [] is read as true, we added the.length > 0 condition
       return res.status(200)
@@ -245,6 +250,44 @@ static async createCampaign (req, res) {
     });
   }
 }
+
+
+//Get campaign by id ----------------------------------------------------------------------------------------------------
+static async getCampaignByCreatorId (req, res) {
+  try {
+    const { userId }= req.params; //put :name in url as parameter
+    const campaign = await Campaign.findAll( {
+      where:{userId: userId},
+      include:[User]});
+    if (campaign ) { //added.length > 0, since empty array is a truthy value  
+      //&& requested_campaign.length > 0
+      return res.status(200)
+      .json({
+        data: campaign,
+        status: 200,
+        success: true,
+        message: "campaign is successfully found",
+      })
+    } else {
+      return res.status(404) //not found
+      .json({
+        data: null,
+        status: 404,
+        success: false,
+        message: `There is no campaign for this user ${campaign}`,
+      })
+    }
+  } catch (error) {
+    return res.status(500) //internal server error
+    .json({
+      data: null,
+      status: 500,
+      success: false,
+      message: `Couldn't get the requested campaign due to server error: ${error}`,
+    });
+  }
+}
+
 
 //Accept(update isAccepted) a campaign by name ----------------------------------------------------------------------------------------------------
  static async acceptCampaign (req, res) {

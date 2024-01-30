@@ -3,16 +3,16 @@ import express from 'express'
 import Verification from '../Middleware/jwt.js';
 const adminRouter = express.Router();
 
-adminRouter.post('/', Verification.verifyAdmin,adminController.createAdmin);
+adminRouter.post('/',adminController.createAdmin);
 
 
-adminRouter.get('/', Verification.verifyAdmin,adminController.findallAdmins);
+adminRouter.get('/',adminController.findallAdmins);
 
-adminRouter.get('/:id', Verification.verifyAdmin,adminController.findAdminByPk);
+adminRouter.get('/:id',adminController.findAdminByPk);
 
-adminRouter.delete('/:id', Verification.verifyAdmin,adminController.deleteAdmin);
+adminRouter.delete('/:id',adminController.deleteAdmin);
 
-adminRouter.put('/:id', Verification.verifyAdmin,adminController.updateAdmin)
+adminRouter.put('/:id', adminController.updateAdmin)
 
 
 

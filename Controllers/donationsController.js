@@ -7,8 +7,17 @@ class DonorController{
 static async getAllDonations (req, res) {
   try {
     const allDonations = await Donation.findAll({include: [Campaign, User]});
+    
+    const addedDonations = await Promise.all( //we use promse all to handle many async functions, without it data will be empty
+      allDonations.map( async(donation) => { // map over donations to enter each donation object
+        const creator = await User.findByPk(donation.Campaign.userId); // get the creator from db using the user id associated with the campaign
+      return {
+      ...donation.toJSON(),
+      creator: creator ? creator.toJSON() : null, //if no creator id exists the data will be null
+    }}));
+
     return res.status(200).json({
-      data: allDonations,
+      data: addedDonations,
       status: 200,
       success: true,
       message: 'Retrieved all donations successfully',
